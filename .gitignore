@@ -26,6 +26,9 @@
 # Visual Studio cache directory
 .vs/
 
+# IntelliJ Idea -pohjaisten IDE:iden (esim. JetBrains Rider) asetustiedostot
+/.idea/
+
 # Gradle cache directory
 .gradle/
 
