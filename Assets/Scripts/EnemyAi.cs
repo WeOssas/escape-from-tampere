@@ -15,6 +15,7 @@ public class EnemyAi : MonoBehaviour
 
     public LayerMask whatIsGround, whatIsPlayer;
 
+
     //Vartiointi
     public Vector3 walkPoint;
     bool walkPointSet;
@@ -95,6 +96,7 @@ public class EnemyAi : MonoBehaviour
         alreadyAttacked = false;
     }
 
+    
 
 
 }
