@@ -16,18 +16,12 @@ public class WeaponDamage : MonoBehaviour
         instance = this;
     }
 
-    void Update()
-    {
-        if(Input.GetButtonDown("Fire1"))
-        {
-            Shoot();
-        }
-    }
+    
 
-    void Shoot()
+    public void Shoot()
     {
         RaycastHit hit;
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range)) ;
+        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range)) 
         {
             Target target = hit.transform.GetComponent<Target>();
             if(target != null)

@@ -12,7 +12,7 @@ public class TempPlayerMovement : MonoBehaviour
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
-    bool jumpReady;
+    bool jumpReady = true;
 
     public KeyCode jumpKey = KeyCode.Space;
 
@@ -66,6 +66,8 @@ public class TempPlayerMovement : MonoBehaviour
 
         if(Input.GetKey(jumpKey) && jumpReady && grounded)
         {
+            Debug.Log(jumpReady);
+            
             jumpReady = false;
 
             Jump();
