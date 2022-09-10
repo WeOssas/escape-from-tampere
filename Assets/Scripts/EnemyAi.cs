@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class EnemyAi : MonoBehaviour
 {
-    /* Muista laittaa pelaajaan ja maahn layerit whatIsPlayer ja whatIsGround, sek‰ laita maahn nav mesh surface.
+    /* Muista laittaa pelaajaan ja maahn layerit whatIsPlayer ja whatIsGround, sek√§ laita maahn nav mesh surface.
      ja siihen layerit whatIsPlayer, whatIsEnemy ja whatisGround.*/
     
     
@@ -21,7 +21,7 @@ public class EnemyAi : MonoBehaviour
     bool walkPointSet;
     public float walkPointRange;
 
-    //Hyˆkk‰ys
+    //Hy√∂kk√§ys
     public float timeBetweenAttacks;
     bool alreadyAttacked;
 
@@ -38,7 +38,7 @@ public class EnemyAi : MonoBehaviour
 
     private void Update()
     {
-        //Jos pelaaja on n‰kyviss‰ ja on hyˆkk‰ys alueella
+        //Jos pelaaja on n√§kyviss√§ ja on hy√∂kk√§ys alueella
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
