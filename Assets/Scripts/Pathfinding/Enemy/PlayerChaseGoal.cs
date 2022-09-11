@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Pathfinding.Enemy
 {
     [Serializable]
-    public class PlayerChaseDestinationProvider : AbstractEnemyPathfindGoal
+    public class PlayerChaseGoal : AbstractEnemyPathfindGoal
     {
         /// <summary>
         /// The distance the player has to be within to be chased.

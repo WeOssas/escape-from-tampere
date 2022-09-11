@@ -38,14 +38,12 @@ namespace Pathfinding.Enemy
             {
                 if (loopCounter++ > 10)
                 {
-                    Debug.Log("Aborted searching for a new pathfinding destination to prevent an infinitely recurring loop and/or a large impact on performance.");
+                    //Debug.Log("Aborted searching for a new pathfinding destination to prevent an infinitely recurring loop and/or a large impact on performance.");
                     return null;
                 }
 
                 // Get a new destination.
                 Vector3? destination = GetDestinationSuggestion();
-                
-                Debug.Log("Possible destination: " + destination);
 
                 if (destination != null)
                 {
@@ -55,13 +53,8 @@ namespace Pathfinding.Enemy
                     NavMeshPath path = new NavMeshPath();
                     if (agent.CalculatePath((Vector3)destination, path) && path.status == NavMeshPathStatus.PathComplete)
                     {
-                        Debug.Log("Path was valid");
                         // The path is valid, so return it.
                         return path;
-                    }
-                    else
-                    {
-                        Debug.Log("Path was" + path.status);
                     }
                 }
                 else

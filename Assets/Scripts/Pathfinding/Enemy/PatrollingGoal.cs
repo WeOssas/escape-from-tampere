@@ -3,7 +3,7 @@ using Random = UnityEngine.Random;
 
 namespace Pathfinding.Enemy
 {
-    public class EnemyPatrollingGoal : AbstractEnemyPathfindGoal
+    public class PatrollingGoal : AbstractEnemyPathfindGoal
     {
         /// <summary>
         /// The X and Z distance within which the enemy will pathfind to.
