@@ -14,8 +14,8 @@ TagManager:
   - Ground
   - Player
   - whatIsGround
-  - whatIsPlayer
-  - whatIsEnemy
+  - Player
+  - Enemy
   - 
   - 
   - 
