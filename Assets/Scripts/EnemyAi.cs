@@ -15,6 +15,8 @@ public class EnemyAi : MonoBehaviour
 
     public LayerMask whatIsGround, whatIsPlayer;
 
+    public Animator anim;
+
 
     //Vartiointi
     public Vector3 walkPoint;
