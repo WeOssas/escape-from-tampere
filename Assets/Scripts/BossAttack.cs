@@ -3,25 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAi : MonoBehaviour
+public class BossAttack : MonoBehaviour
 {
     /* Muista laittaa pelaajaan ja maahn layerit whatIsPlayer ja whatIsGround, sekä laita maahn nav mesh surface.
      ja siihen layerit whatIsPlayer, whatIsEnemy ja whatisGround.*/
 
-    //-----Perus muuttujat----\\
-    
-    public int damage;
-    
-    public int health;
-    
-    //-------------------------\\
 
-    
     public NavMeshAgent agent;
 
     public Transform player;
 
-    //Layermaskit tarvitaan maan ja pelaajan erottamiseen
     public LayerMask whatIsGround, whatIsPlayer;
 
     public Animator anim;
@@ -50,9 +41,6 @@ public class EnemyAi : MonoBehaviour
     private void Update()
     {
         //Jos pelaaja on näkyvissä ja on hyökkäys alueella
-        if(health <= 0)
-            Destroy(gameObject);
-        
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
@@ -83,14 +71,14 @@ public class EnemyAi : MonoBehaviour
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
-        
-        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+
+        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
             walkPointSet = true;
     }
 
     private void ChasePlayer()
     {
-        agent.SetDestination(player.position);    
+        agent.SetDestination(player.position);
     }
 
     private void AttackPlayer()
@@ -101,7 +89,6 @@ public class EnemyAi : MonoBehaviour
 
         if (!alreadyAttacked)
         {
-            DamageInput.instance.healthAmount -= damage;
             alreadyAttacked = true;
             Invoke(nameof(ResetAttack), timeBetweenAttacks);
         }
@@ -111,7 +98,7 @@ public class EnemyAi : MonoBehaviour
         alreadyAttacked = false;
     }
 
-    
+
 
 
 }
