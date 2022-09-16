@@ -24,6 +24,11 @@ public class EnemyAi : MonoBehaviour
     /// Distance the player has to be within to be attacked by this enemy
     /// </summary>
     public float attackRange;
+    
+    /// <summary>
+    /// Amount of damage this enemy deals to the player.
+    /// </summary>
+    [FormerlySerializedAs("damage")] public float attackDamage;
 
     private AbstractEnemyPathfindGoal[] pathfindingGoals;
 
@@ -78,8 +83,9 @@ public class EnemyAi : MonoBehaviour
 
         if (!attackOnCooldown)
         {
-            // TODO: Attack the player.
-            
+            VulnerableObject player = PlayerInstance.instance.GetComponent<VulnerableObject>();
+            player.TakeDamage(attackDamage);
+
             attackOnCooldown = true;
             Invoke(nameof(ResetAttack), attackCooldown);
         }
