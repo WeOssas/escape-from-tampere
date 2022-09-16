@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Used to create a static reference to the player.
@@ -13,5 +14,12 @@ public class PlayerInstance : MonoBehaviour
     public void Awake()
     {
         instance = this;
+    }
+
+    public void OnDestroy()
+    {
+        // When the player dies, reload the current scene.
+        // TODO: maybe add a death screen/animation and/or checkpoints
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
     }
 }
