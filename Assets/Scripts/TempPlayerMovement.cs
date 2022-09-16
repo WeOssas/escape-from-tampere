@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class TempPlayerMovement : MonoBehaviour
 {
-    //References//
+    //References
     public Transform player;
     Rigidbody rb;
 
-    //Variables and settings for jumping//
+    //Variables and settings for jumping
     public float jumpForce;
     public float jumpCooldown;
     public float airMultiplier;
@@ -17,14 +17,14 @@ public class TempPlayerMovement : MonoBehaviour
     public KeyCode jumpKey = KeyCode.Space;
 
 
-    //Ground Checking//
+    //Ground Checking
     public float groundDrag;
 
     public float playerHeight;
     public LayerMask whatIsGround;
     bool grounded;
 
-    //Player movement related//
+    //Player movement related
    
     public float moveSpeed;
     float horizontalInput;
@@ -47,11 +47,8 @@ public class TempPlayerMovement : MonoBehaviour
         
         MyInput();
         SpeedControl();
-
-        if (grounded)
-            rb.drag = groundDrag;
-        else
-            rb.drag = 0;
+        
+        rb.drag = grounded ? groundDrag : 0;
     }
     private void FixedUpdate()
     {

@@ -15,18 +15,16 @@ public class WeaponDamage : MonoBehaviour
     {
         instance = this;
     }
-
     
-
     public void Shoot()
     {
         RaycastHit hit;
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range)) 
+        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range)) 
         {
-            Target target = hit.transform.GetComponent<Target>();
-            if(target != null)
+            VulnerableObject vulnerableObject = hit.transform.GetComponent<VulnerableObject>();
+            if (vulnerableObject != null)
             {
-                target.TakeDamage(damageAmount);
+                vulnerableObject.TakeDamage(damageAmount);
             }
         }
     }
