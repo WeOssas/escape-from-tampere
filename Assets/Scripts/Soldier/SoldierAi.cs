@@ -48,6 +48,7 @@ public class SoldierAi : MonoBehaviour
         if (!agent.hasPath)
         {
             agent.SetDestination(SearchPath());
+            ChaseAndShoot();
             anim.SetBool("Patrol", true);
         }
     }
