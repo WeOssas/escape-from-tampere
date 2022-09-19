@@ -72,30 +72,14 @@ public class GunBullet : MonoBehaviour
     {
         readyToShoot = false;
         WeaponDamage.instance.Shoot();
-        
-        //Find the hit position using raycast
-        Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-        RaycastHit hit;
-        Vector3 targetPoint = Physics.Raycast(ray, out hit) ? hit.point : ray.GetPoint(75);
 
-        //Calculate direction from attackPoint to targetPoint
-        Vector3 directionWithoutSpread = targetPoint - transform.position;
-
-        //calculate spread
-        float x = Random.Range(-spread, spread);
-        float y = Random.Range(-spread, spread);
-
-        //Calculate new direction with spread
-        Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0);
+        Vector3 bulletDirection = GetBulletDirection();
 
         //Instantiate the bullet
-        GameObject currentBullet = Instantiate(bullet, transform.position, Quaternion.identity);
-
-        //Rotate bullet to shoot direction
-        currentBullet.transform.forward = directionWithSpread.normalized;
+        GameObject currentBullet = Instantiate(bullet, transform.position, Quaternion.LookRotation(bulletDirection));
 
         //Add forces to bullet
-        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootingForce, ForceMode.Impulse);
+        currentBullet.GetComponent<Rigidbody>().AddForce(bulletDirection * shootingForce, ForceMode.Impulse);
         //currentBullet.GetComponent<Rigidbody>().AddForce(cam.transform.up * upwardForce, ForceMode.Impulse);
         
         //instantiate muzzle flash (if you want)
@@ -120,6 +104,19 @@ public class GunBullet : MonoBehaviour
             Invoke(nameof(Shoot), timeBetweenShots);
         }
 
+    }
+
+    private Vector3 GetBulletDirection()
+    {
+        // The direction of a ray from the middle of the screen.
+        Vector3 rawDirection = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f)).direction;
+
+        // Determine the amount of spread.
+        float x = Random.Range(-spread, spread);
+        float y = Random.Range(-spread, spread);
+
+        // Calculate new direction with spread, and return it normalized.
+        return (rawDirection + new Vector3(x, y)).normalized;
     }
 
     private void ResetShot()

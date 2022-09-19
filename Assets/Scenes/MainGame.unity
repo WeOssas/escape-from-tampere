@@ -1558,7 +1558,7 @@ MonoBehaviour:
   bullet: {fileID: 8563566709217122221, guid: f76396bfc35acbc488ec305a11cdbb02, type: 3}
   shootingForce: 300
   timeBetweenShooting: 0.1
-  spread: 3
+  spread: 0.05
   reloadTime: 2
   timeBetweenShots: 0
   magazineSize: 30
