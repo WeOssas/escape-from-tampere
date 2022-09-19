@@ -95,7 +95,7 @@ public class GunBullet : MonoBehaviour
         if (muzzleFlash != null)
         {
             Instantiate(muzzleFlash, transform.position, Quaternion.identity);
-            Destroy(muzzleFlash);
+            
         }
         
         bulletsLeft--;
