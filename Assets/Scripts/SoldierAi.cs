@@ -1,18 +1,72 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SoldierAi : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public static SoldierAi instance;
+    public Animator anim;
+    public NavMeshAgent agent;
+
+    public GameObject gunBullet;
+    public Transform shootPos;
+
+    private bool inRestrictedArea;
+    private int timesToShoot = 5;
+    public bool gotShot;
+
+
+    void Shoot()
     {
-        
+        GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
+        newBullet.GetComponent<Rigidbody>().AddForce(Vector3.forward * 100, ForceMode.Impulse);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        instance = this;
     }
+
+    private void Update()
+    {
+        if (gotShot)
+        {
+
+            for (int i = 0; i < timesToShoot; i++)
+            {
+                Invoke("Shoot", 0f);
+            }
+
+            gotShot = false;
+
+        }
+        
+        if (!agent.hasPath)
+        {
+            agent.SetDestination(SearchPath());
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Bullet")
+        {
+            gotShot = true;
+        }
+    }
+
+    private Vector3 SearchPath()
+    {
+        Vector3 newDest = SoldierPatrol.instance.GetDestinationSuggestion();
+        return newDest;
+    }
+
+
+
+   
+
+
 }
+
+
