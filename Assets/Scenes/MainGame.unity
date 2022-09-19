@@ -440,19 +440,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400060, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
   m_PrefabInstance: {fileID: 117296907}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &117296910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 117296908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9db57ad2a790dbb4b834787beb3206d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathfindingRange: 10
 --- !u!114 &117296911
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,6 +457,7 @@ MonoBehaviour:
   gunBullet: {fileID: 4955154107629612080, guid: 8dd3b2e1a95f23044a3855bb2874547d, type: 3}
   shootPos: {fileID: 814001767}
   gotShot: 0
+  pathfindingRange: 100
 --- !u!95 &117296912 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 9500000, guid: fcb334eb247ae3e488abb081c847cf09, type: 3}
