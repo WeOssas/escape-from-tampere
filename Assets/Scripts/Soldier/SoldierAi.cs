@@ -20,12 +20,7 @@ public class SoldierAi : MonoBehaviour
 
     public float pathfindingRange;
 
-    void Shoot()
-    {
-        GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
-        newBullet.GetComponent<Rigidbody>().AddForce(Vector3.forward * 100, ForceMode.Impulse);
-    }
-
+  
     private void Awake()
     {
         instance = this;
@@ -38,7 +33,7 @@ public class SoldierAi : MonoBehaviour
 
             for (int i = 0; i < timesToShoot; i++)
             {
-                Invoke("Shoot", 0f);
+                Invoke("ChaseAndShoot", 0f);
             }
 
             gotShot = false;
@@ -48,7 +43,6 @@ public class SoldierAi : MonoBehaviour
         if (!agent.hasPath)
         {
             agent.SetDestination(SearchPath());
-            ChaseAndShoot();
             anim.SetBool("Patrol", true);
         }
     }
@@ -81,7 +75,12 @@ public class SoldierAi : MonoBehaviour
 
     public void ChaseAndShoot()
     {
-        anim.SetBool("GotShot", true);
+        anim.SetBool("Patrol", false);
+        anim.Play("attack");
+        GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
+        newBullet.GetComponent<Rigidbody>().AddForce(Vector3.forward * 100, ForceMode.Impulse);
+
+
     }
 
 

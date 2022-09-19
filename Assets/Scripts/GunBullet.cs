@@ -14,7 +14,7 @@ public class GunBullet : MonoBehaviour
     public float shootingForce;
 
     //stats for the gun
-    public float timeBetweenShooting, spread, reloadTime, timeBetweenShots;
+    public float timeBetweenShooting, reloadTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
     
@@ -81,27 +81,21 @@ public class GunBullet : MonoBehaviour
         //Calculate direction from attackPoint to targetPoint
         Vector3 directionWithoutSpread = targetPoint - transform.position;
 
-        //calculate spread
-        float x = Random.Range(-spread, spread);
-        float y = Random.Range(-spread, spread);
-
-        //Calculate new direction with spread
-        Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x, y, 0);
-
         //Instantiate the bullet
         GameObject currentBullet = Instantiate(bullet, transform.position, Quaternion.identity);
 
         //Rotate bullet to shoot direction
-        currentBullet.transform.forward = directionWithSpread.normalized;
+        currentBullet.transform.forward = directionWithoutSpread.normalized;
 
         //Add forces to bullet
-        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootingForce, ForceMode.Impulse);
+        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithoutSpread.normalized * shootingForce, ForceMode.Impulse);
         //currentBullet.GetComponent<Rigidbody>().AddForce(cam.transform.up * upwardForce, ForceMode.Impulse);
         
         //instantiate muzzle flash (if you want)
         if (muzzleFlash != null)
         {
             Instantiate(muzzleFlash, transform.position, Quaternion.identity);
+            Destroy(muzzleFlash);
         }
         
         bulletsLeft--;
