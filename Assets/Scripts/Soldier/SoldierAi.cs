@@ -31,14 +31,8 @@ public class SoldierAi : MonoBehaviour
     {
         if (gotShot)
         {
-
-            for (int i = 0; i < timesToShoot; i++)
-            {
-                Invoke("ChaseAndShoot", 0f);
-            }
-
-            
-
+            Invoke("ChaseAndShoot", 0f);
+            gotShot = false;
         }
         
         else if (!gotShot && !agent.hasPath)
@@ -47,9 +41,9 @@ public class SoldierAi : MonoBehaviour
             anim.SetBool("Patrol", true);
         }
     }
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        if (other.gameObject.tag == "Bullet")
+        if (collision.gameObject.tag == "PlayerBullet")
         {
             gotShot = true;
         }
@@ -79,10 +73,10 @@ public class SoldierAi : MonoBehaviour
         
         agent.SetDestination(GetChasingSuggestion());
         transform.LookAt(PlayerInstance.instance.transform);
-        anim.Play("attack");
-        GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
-        newBullet.GetComponent<Rigidbody>().AddForce(Vector3.forward * 100, ForceMode.Impulse);
-
+        for(int i = 0; i < timesToShoot; i++)
+        {
+            shoot();
+        }
 
     }
 
@@ -94,7 +88,13 @@ public class SoldierAi : MonoBehaviour
         return Vector3.Distance(transform.position, playerPos) <= maxChasingRange ? playerPos : Vector3.zero;
     }
 
+    public void shoot()
+    {
+        anim.Play("attack");
+        GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
+        newBullet.GetComponent<Rigidbody>().AddForce(Vector3.forward * 100, ForceMode.Impulse);
 
+    }
 
 
 

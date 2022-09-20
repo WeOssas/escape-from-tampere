@@ -14,4 +14,6 @@ public class DestroyBullet : MonoBehaviour
         yield return new WaitForSeconds(time);
         Destroy(this.gameObject);
     }
+
+   
 }
