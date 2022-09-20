@@ -19,6 +19,7 @@ public class SoldierAi : MonoBehaviour
     public bool gotShot;
 
     public float pathfindingRange;
+    public float maxChasingRange;
 
   
     private void Awake()
@@ -36,11 +37,11 @@ public class SoldierAi : MonoBehaviour
                 Invoke("ChaseAndShoot", 0f);
             }
 
-            gotShot = false;
+            
 
         }
         
-        if (!agent.hasPath)
+        else if (!gotShot && !agent.hasPath)
         {
             agent.SetDestination(SearchPath());
             anim.SetBool("Patrol", true);
@@ -75,13 +76,24 @@ public class SoldierAi : MonoBehaviour
 
     public void ChaseAndShoot()
     {
-        anim.SetBool("Patrol", false);
+        
+        agent.SetDestination(GetChasingSuggestion());
+        transform.LookAt(PlayerInstance.instance.transform);
         anim.Play("attack");
         GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
         newBullet.GetComponent<Rigidbody>().AddForce(Vector3.forward * 100, ForceMode.Impulse);
 
 
     }
+
+    Vector3 GetChasingSuggestion()
+    {
+        Vector3 playerPos = PlayerInstance.instance.transform.position;
+
+        // If the player is in range, return player position, else null.
+        return Vector3.Distance(transform.position, playerPos) <= maxChasingRange ? playerPos : Vector3.zero;
+    }
+
 
 
 
