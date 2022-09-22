@@ -1907,6 +1907,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 7495209973588047993}
   attackCooldown: 0.5
+  anim: {fileID: 984947385668286494}
   attackRange: 2
   attackDamage: 50
 --- !u!114 &1570869333474773805

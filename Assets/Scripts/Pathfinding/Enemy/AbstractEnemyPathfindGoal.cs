@@ -73,5 +73,21 @@ namespace Pathfinding.Enemy
         /// Negative values are considered inactive goals that should never be used.
         /// </summary>
         public abstract int GetPriority();
+
+        /// <summary>
+        /// Method that is called when this goal is chosen to be used.
+        /// </summary>
+        public virtual void OnUsed(Animator animator)
+        {
+            
+        }
+        
+        /// <summary>
+        /// Method that is called when this goal is no longer used, but was previously used.
+        /// </summary>
+        public virtual void OnUnused(Animator animator)
+        {
+            
+        }
     }
 }
