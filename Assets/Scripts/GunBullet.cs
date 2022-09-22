@@ -78,17 +78,17 @@ public class GunBullet : MonoBehaviour
         RaycastHit hit;
         Vector3 targetPoint = Physics.Raycast(ray, out hit) ? hit.point : ray.GetPoint(75);
 
-        //Calculate direction from attackPoint to targetPoint
-        Vector3 directionWithoutSpread = targetPoint - transform.position;
+        //Calculate normalized direction from attackPoint to targetPoint
+        Vector3 direction = (targetPoint - transform.position).normalized;
 
         //Instantiate the bullet
         GameObject currentBullet = Instantiate(bullet, transform.position, Quaternion.identity);
 
         //Rotate bullet to shoot direction
-        currentBullet.transform.forward = directionWithoutSpread.normalized;
+        currentBullet.transform.forward = direction;
 
         //Add forces to bullet
-        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithoutSpread.normalized * shootingForce, ForceMode.Impulse);
+        currentBullet.GetComponent<Rigidbody>().AddForce(direction * shootingForce, ForceMode.Impulse);
         //currentBullet.GetComponent<Rigidbody>().AddForce(cam.transform.up * upwardForce, ForceMode.Impulse);
         
         //instantiate muzzle flash (if you want)
