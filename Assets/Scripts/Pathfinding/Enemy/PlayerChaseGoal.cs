@@ -6,6 +6,7 @@ namespace Pathfinding.Enemy
     [Serializable]
     public class PlayerChaseGoal : AbstractEnemyPathfindGoal
     {
+        
         /// <summary>
         /// The distance the player has to be within to be chased.
         /// </summary>
@@ -33,5 +34,6 @@ namespace Pathfinding.Enemy
         {
             return 100;
         }
+       
     }
 }

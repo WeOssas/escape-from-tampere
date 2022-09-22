@@ -20,6 +20,7 @@ public class EnemyAi : MonoBehaviour
     /// Whether the attack is currently cooling down.
     /// </summary>
     private bool attackOnCooldown;
+    public Animator anim;
     /// <summary>
     /// Distance the player has to be within to be attacked by this enemy
     /// </summary>
@@ -70,6 +71,7 @@ public class EnemyAi : MonoBehaviour
             if (destination != null)
             {
                 agent.SetPath(destination);
+                anim.SetBool("Patrolling", true);
                 return;
             }
         }
@@ -85,6 +87,8 @@ public class EnemyAi : MonoBehaviour
         {
             VulnerableObject player = PlayerInstance.instance.GetComponent<VulnerableObject>();
             player.TakeDamage(attackDamage);
+            // TODO: Attack the player.
+            anim.Play("Attack");
 
             attackOnCooldown = true;
             Invoke(nameof(ResetAttack), attackCooldown);
