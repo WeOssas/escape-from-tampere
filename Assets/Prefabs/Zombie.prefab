@@ -1906,7 +1906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 7495209973588047993}
-  attackCooldown: 0.5
+  attackCooldown: 1
   anim: {fileID: 984947385668286494}
   attackRange: 2
   attackDamage: 50
@@ -1935,7 +1935,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9546b15c500847c5881dd63226191490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathfindingRange: 5
+  pathfindingRange: 100
 --- !u!114 &2931224728587749168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1948,7 +1948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2a1372753c411ca57674fede2dc667, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxChasingDistance: 10
+  maxChasingDistance: 50
 --- !u!1 &5932379309487671817
 GameObject:
   m_ObjectHideFlags: 0

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44384152, g: 0.4868561, b: 0.5384858, a: 1}
+  m_IndirectSpecularColor: {r: 0.443842, g: 0.48685706, b: 0.5384868, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -909,10 +909,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2931224728587749168, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
-      propertyPath: maxChasingDistance
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 5764818723134814430, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
       propertyPath: m_Name
       value: Zombie (1)
@@ -960,18 +956,6 @@ PrefabInstance:
     - target: {fileID: 6578370068538253924, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7091037236069273178, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
-      propertyPath: attackCooldown
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7495209973588047993, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
-      propertyPath: m_BaseOffset
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8042446267626576620, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
-      propertyPath: pathfindingRange
-      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
@@ -6229,7 +6213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed5bf50fd4a2a034ab89353183ea1f37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 200
+  health: 100000
 --- !u!1 &814001766
 GameObject:
   m_ObjectHideFlags: 0
