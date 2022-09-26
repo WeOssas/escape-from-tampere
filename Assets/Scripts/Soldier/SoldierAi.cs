@@ -8,15 +8,20 @@ public class SoldierAi : MonoBehaviour
     // Static is made just in case.
     public static SoldierAi instance;
     
+
     public Animator anim;
     public NavMeshAgent agent;
 
     public GameObject gunBullet;
     public Transform shootPos;
+    public Transform playerPos;
 
     private bool inRestrictedArea;
     private int timesToShoot = 5;
     public bool gotShot;
+    public float attackRange;
+    private bool inAttackRange;
+    
 
     public float pathfindingRange;
     public float maxChasingRange;
@@ -29,17 +34,13 @@ public class SoldierAi : MonoBehaviour
 
     private void Update()
     {
-        if (gotShot)
+        if (Vector3.Distance(transform.position, PlayerInstance.instance.transform.position) <= attackRange)
         {
-            Invoke("ChaseAndShoot", 0f);
-            gotShot = false;
+            inAttackRange = true;
         }
+
+        AttackOrPatrol();
         
-        else if (!gotShot && !agent.hasPath)
-        {
-            agent.SetDestination(SearchPath());
-            anim.SetBool("Patrol", true);
-        }
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -71,7 +72,13 @@ public class SoldierAi : MonoBehaviour
     public void ChaseAndShoot()
     {
         
-        agent.SetDestination(GetChasingSuggestion());
+        if(agent.SetDestination(GetChasingSuggestion()) == false)
+        {
+            gotShot = false;
+            inAttackRange = false;
+            return;
+        }
+
         transform.LookAt(PlayerInstance.instance.transform);
         for(int i = 0; i < timesToShoot; i++)
         {
@@ -92,10 +99,23 @@ public class SoldierAi : MonoBehaviour
     {
         anim.Play("attack");
         GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
-        newBullet.GetComponent<Rigidbody>().AddForce(Vector3.forward * 100, ForceMode.Impulse);
+        newBullet.GetComponent<Rigidbody>().AddForce(playerPos.transform.position * 100, ForceMode.Impulse);
 
     }
 
+    private void AttackOrPatrol()
+    {
+        if (gotShot && inAttackRange)
+        {
+            ChaseAndShoot();
+        }
+
+        else if (!gotShot && !agent.hasPath && !inAttackRange)
+        {
+            agent.SetDestination(SearchPath());
+            anim.SetBool("Patrol", true);
+        }
+    }
 
 
 }
