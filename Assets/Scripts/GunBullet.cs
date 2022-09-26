@@ -14,7 +14,7 @@ public class GunBullet : MonoBehaviour
     public float shootingForce;
 
     //stats for the gun
-    public float timeBetweenShooting, spread, reloadTime, timeBetweenShots;
+    public float timeBetweenShooting, reloadTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
     public bool allowButtonHold;
     
@@ -72,16 +72,16 @@ public class GunBullet : MonoBehaviour
     {
         readyToShoot = false;
         WeaponDamage.instance.Shoot();
-
-        Vector3 bulletDirection = GetBulletDirection();
-
+        
+        // Direction to shoot towards
+        Vector3 bulletDirection = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)).direction;
+        
         //Instantiate the bullet
         GameObject currentBullet = Instantiate(bullet, transform.position, Quaternion.LookRotation(bulletDirection));
 
         //Add forces to bullet
         currentBullet.GetComponent<Rigidbody>().AddForce(bulletDirection * shootingForce, ForceMode.Impulse);
-        //currentBullet.GetComponent<Rigidbody>().AddForce(cam.transform.up * upwardForce, ForceMode.Impulse);
-        
+
         //instantiate muzzle flash (if you want)
         if (muzzleFlash != null)
         {
@@ -104,19 +104,6 @@ public class GunBullet : MonoBehaviour
             Invoke(nameof(Shoot), timeBetweenShots);
         }
 
-    }
-
-    private Vector3 GetBulletDirection()
-    {
-        // The direction of a ray from the middle of the screen.
-        Vector3 rawDirection = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f)).direction;
-
-        // Determine the amount of spread.
-        float x = Random.Range(-spread, spread);
-        float y = Random.Range(-spread, spread);
-
-        // Calculate new direction with spread, and return it normalized.
-        return (rawDirection + new Vector3(x, y)).normalized;
     }
 
     private void ResetShot()

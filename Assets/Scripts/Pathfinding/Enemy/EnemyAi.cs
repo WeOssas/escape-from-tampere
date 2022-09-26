@@ -1,4 +1,5 @@
 using System.Linq;
+using JetBrains.Annotations;
 using Pathfinding.Enemy;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,8 +7,8 @@ using UnityEngine.Serialization;
 
 public class EnemyAi : MonoBehaviour
 {
-    /* Muista laittaa pelaajaan ja maahn layerit whatIsPlayer ja whatIsGround, sekä laita maahn nav mesh surface.
-     ja siihen layerit whatIsPlayer, whatIsEnemy ja whatisGround.*/
+    /* Muista laittaa pelaajaan ja maahan layerit Player ja Ground, sekä laita maahan NavMeshSurface
+     ja siihen layeri Ground.*/
     
     public NavMeshAgent agent;
 
@@ -20,6 +21,7 @@ public class EnemyAi : MonoBehaviour
     /// Whether the attack is currently cooling down.
     /// </summary>
     private bool attackOnCooldown;
+    public Animator anim;
     /// <summary>
     /// Distance the player has to be within to be attacked by this enemy
     /// </summary>
@@ -31,6 +33,7 @@ public class EnemyAi : MonoBehaviour
     [FormerlySerializedAs("damage")] public float attackDamage;
 
     private AbstractEnemyPathfindGoal[] pathfindingGoals;
+    [CanBeNull] private AbstractEnemyPathfindGoal activeGoal;
 
     private void Awake()
     {
@@ -70,6 +73,12 @@ public class EnemyAi : MonoBehaviour
             if (destination != null)
             {
                 agent.SetPath(destination);
+                if (goal != activeGoal)
+                {
+                    if (activeGoal != null) activeGoal.OnUnused(anim);
+                    goal.OnUsed(anim);
+                    activeGoal = goal;
+                }
                 return;
             }
         }
@@ -83,9 +92,14 @@ public class EnemyAi : MonoBehaviour
 
         if (!attackOnCooldown)
         {
+            // Attack the player
             VulnerableObject player = PlayerInstance.instance.GetComponent<VulnerableObject>();
             player.TakeDamage(attackDamage);
+            
+            // Play attack animation
+            anim.Play("Attack");
 
+            // Set attack cooldown
             attackOnCooldown = true;
             Invoke(nameof(ResetAttack), attackCooldown);
         }
