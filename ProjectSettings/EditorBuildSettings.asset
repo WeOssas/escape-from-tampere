@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: "Assets/Scenes/JoniScene/p\xE4\xE4 Menu.unity"
+    guid: 4ff8e1125619c0d499e5ab0919ae1a56
+  - enabled: 1
+    path: Assets/Scenes/JoniScene/JoniScene.unity
+    guid: 911875eb09e8bcc46b7c9e6cf632d02d
   m_configObjects: {}
