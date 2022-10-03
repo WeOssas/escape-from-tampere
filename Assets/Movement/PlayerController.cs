@@ -48,6 +48,8 @@ namespace escapefromtampere.PlayerControl
 
         private float xRotation;
 
+        private int _zVelHash;
+
         private const float walkSpeed = 2f;
         private const float runSpeed = 6f;
 
@@ -64,6 +66,7 @@ namespace escapefromtampere.PlayerControl
             jumpHash = Animator.StringToHash("Jump");
             groundHash = Animator.StringToHash("Grounded");
             fallingHash = Animator.StringToHash("Falling");
+            _zVelHash = Animator.StringToHash("Z_Velocity");
 
         }
 
@@ -143,6 +146,7 @@ namespace escapefromtampere.PlayerControl
             }
             
             grounded = false;
+            anim.SetFloat(_zVelHash, playerRb.velocity.y);
             SetAnimationGrounding();
             return;
 
