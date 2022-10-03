@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 
 
 namespace escapefromtampere.Manager
@@ -15,29 +12,36 @@ namespace escapefromtampere.Manager
 
         public Vector2 Look { get; private set; } 
         public bool Run { get; private set; }
+
+        public bool Jump { get; private set; }
         
-        private InputActionMap _currentMap;
+        private InputActionMap currentMap;
 
-        private InputAction _moveAction;
+        private InputAction moveAction;
 
-        private InputAction _lookAction;
+        private InputAction lookAction;
 
-        private InputAction _runAction;
+        private InputAction runAction;
+
+        private InputAction jumpAction;
 
         private void Awake()
         {
-            _currentMap = playerInput.currentActionMap;
-            _moveAction = _currentMap.FindAction("Move");
-            _lookAction = _currentMap.FindAction("Look");
-            _runAction = _currentMap.FindAction("Run");
+            currentMap = playerInput.currentActionMap;
+            moveAction = currentMap.FindAction("Move");
+            lookAction = currentMap.FindAction("Look");
+            runAction = currentMap.FindAction("Run");
+            jumpAction = currentMap.FindAction("Jump");
 
-            _moveAction.performed += onMove;
-            _lookAction.performed += onLook;
-            _runAction.performed += onRun;
+            moveAction.performed += onMove;
+            lookAction.performed += onLook;
+            runAction.performed += onRun;
+            jumpAction.performed += onJump;
 
-            _moveAction.canceled += onMove;
-            _lookAction.canceled += onLook;
-            _runAction.canceled += onRun;
+            moveAction.canceled += onMove;
+            lookAction.canceled += onLook;
+            runAction.canceled += onRun;
+            jumpAction.canceled += onJump;
 
         }
 
@@ -56,14 +60,19 @@ namespace escapefromtampere.Manager
             Run = context.ReadValueAsButton();
         }
 
+        private void onJump(InputAction.CallbackContext context)
+        {
+            Jump = context.ReadValueAsButton();
+        }
+
         private void OnEnable()
         {
-            _currentMap.Enable();
+            currentMap.Enable();
         }
 
         private void OnDisable()
         {
-            _currentMap?.Disable();
+            currentMap.Disable();
         }
 
 

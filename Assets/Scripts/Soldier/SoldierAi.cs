@@ -111,28 +111,28 @@ public class SoldierAi : MonoBehaviour
         AttackOrPatrol();
         
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "PlayerBullet")
+        if (other.gameObject.tag == "PlayerBullet")
         {
             gotShot = true;
         }
     }
 
-    
+
 
     /// <returns>
     /// A destination suggestion that will be used if it is determined valid. May be null (in which case the suggestion won't be valid).
     /// </returns>
-   
 
-    
 
-    
 
-  
 
-    
+
+
+
+
+
 
 
 }

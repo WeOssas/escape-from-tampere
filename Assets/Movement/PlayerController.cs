@@ -8,59 +8,153 @@ namespace escapefromtampere.PlayerControl
 {
     public class PlayerController : MonoBehaviour
     {
-        private Rigidbody _playerRigidBody;
+        [SerializeField] private float animBlendSpeed;
+        
+        [SerializeField] private Transform camHolder;
 
-        private InputManager _inputManager;
+        [SerializeField] private Transform cam;
 
-        private Animator _animator;
+        [SerializeField] private float upperLimit = -40f;
+        [SerializeField] private float bottomLimit = 70f;
 
-        private bool _hasAnimator;
+        [SerializeField] private float mouseSens = 21f;
 
-        private int _xVelHash;
+        [SerializeField] private float jumpFactor = 250f;
 
-        private int _yVelHash;
+        [SerializeField] private float disToGround = 10f;
 
-        private const float _walkSpeed = 2f;
-        private const float _runSpeed = 6f;
+        [SerializeField] private LayerMask groundCheck;
 
-        private Vector2 _currentVelocity;
+
+        private Rigidbody playerRb;
+
+        private InputManager inputManagerr;
+
+        private Animator anim;
+
+        private bool hasAnimator;
+
+        private bool grounded;
+
+        private int xVelHash;
+
+        private int yVelHash;
+
+        private int jumpHash;
+
+        private int groundHash;
+
+        private int fallingHash;
+
+        private float xRotation;
+
+        private const float walkSpeed = 2f;
+        private const float runSpeed = 6f;
+
+        private Vector2 currentVelocity;
 
         private void Start()
         {
-            _hasAnimator = TryGetComponent<Animator>(out _animator);
-            _playerRigidBody = GetComponent<Rigidbody>();
-            _inputManager = GetComponent<InputManager>();
+            hasAnimator = TryGetComponent<Animator>(out anim);
+            playerRb = GetComponent<Rigidbody>();
+            inputManagerr = GetComponent<InputManager>();
 
-            _xVelHash = Animator.StringToHash("X_Velocity");
-            _yVelHash = Animator.StringToHash("Y_Velocity");
+            xVelHash = Animator.StringToHash("X_Velocity");
+            yVelHash = Animator.StringToHash("Y_Velocity");
+            jumpHash = Animator.StringToHash("Jump");
+            groundHash = Animator.StringToHash("Grounded");
+            fallingHash = Animator.StringToHash("Falling");
+
         }
 
         private void FixedUpdate()
         {
+            SampleGround();
             Move();
+            HandleJump();
+            
+        }
+        private void LateUpdate()
+        {
+            CameraMovement();
         }
 
         private void Move()
         {
-            if (!_hasAnimator) return;
+            if (!hasAnimator) return;
 
-            float targetSpeed = _inputManager.Run ? _runSpeed : _walkSpeed;
-            if(_inputManager.Move == Vector2.zero) targetSpeed = 0.1f;
+            float targetSpeed = inputManagerr.Run ? runSpeed : walkSpeed;
+            if(inputManagerr.Move == Vector2.zero) targetSpeed = 0.1f;
 
-            _currentVelocity.x = targetSpeed * _inputManager.Move.x;
-            _currentVelocity.y = targetSpeed * _inputManager.Move.y;
+            currentVelocity.x = Mathf.Lerp(currentVelocity.x, inputManagerr.Move.x * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
+            currentVelocity.y = Mathf.Lerp(currentVelocity.y, inputManagerr.Move.y * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
 
-            var xVelDifference = _currentVelocity.x - _playerRigidBody.velocity.x;
-            var zVelDifference = _currentVelocity.y - _playerRigidBody.velocity.z;
+            var xVelDifference = currentVelocity.x - playerRb.velocity.x;
+            var zVelDifference = currentVelocity.y - playerRb.velocity.z;
 
 
-            _playerRigidBody.AddForce(transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference)), ForceMode.VelocityChange);
+            playerRb.AddForce(transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference)), ForceMode.VelocityChange);
             
-            _animator.SetFloat(_xVelHash, _currentVelocity.x);
-            _animator.SetFloat(_yVelHash, _currentVelocity.y);
+            anim.SetFloat(xVelHash, currentVelocity.x);
+            anim.SetFloat(yVelHash, currentVelocity.y);
         }
 
+        private void CameraMovement()
+        {
+            if(!hasAnimator) return;
 
+            var Mouse_X = inputManagerr.Look.x;
+            var Mouse_Y = inputManagerr.Look.y;
+            cam.position = camHolder.position;
+
+            xRotation -= Mouse_Y * mouseSens * Time.deltaTime;
+            xRotation = Mathf.Clamp(xRotation, upperLimit, bottomLimit);
+
+            cam.localRotation = Quaternion.Euler(xRotation,0,0);
+            transform.Rotate(Vector3.up, Mouse_X * mouseSens * Time.deltaTime);
+        }
+
+        private void HandleJump()
+        {
+            if (!hasAnimator) return;
+            if (!inputManagerr.Jump) return;
+            anim.SetTrigger(jumpHash);
+            
+
+        }
+
+        public void JumpAddForce()
+        {
+            playerRb.AddForce(-playerRb.velocity.y * Vector3.up, ForceMode.VelocityChange);
+            playerRb.AddForce(Vector3.up * jumpFactor, ForceMode.Impulse);
+            anim.ResetTrigger(jumpHash);
+        }
+
+        private void SampleGround()
+        {
+            if (!hasAnimator) return;
+
+            RaycastHit hitInfo;
+            if(Physics.Raycast(playerRb.worldCenterOfMass, Vector3.down, out hitInfo, disToGround + 0.1f, groundCheck))
+            {
+                grounded = true;
+                SetAnimationGrounding();
+                return;
+            }
+            
+            grounded = false;
+            SetAnimationGrounding();
+            return;
+
+        }
+
+        void SetAnimationGrounding()
+        {
+            Debug.Log(grounded);
+            anim.SetBool(fallingHash, !grounded);
+            anim.SetBool(groundHash, grounded);
+            
+        }
     }
 
 
