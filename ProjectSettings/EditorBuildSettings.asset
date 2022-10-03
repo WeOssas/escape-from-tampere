@@ -12,3 +12,6 @@ EditorBuildSettings:
     path: Assets/Scenes/JoniScene/Toimivat/PeliScene.unity
     guid: 911875eb09e8bcc46b7c9e6cf632d02d
   m_configObjects: {}
+  m_Scenes: []
+  m_configObjects:
+    com.unity.input.settings: {fileID: 11400000, guid: 3920280d83081224b862eab7187b855e, type: 2}
