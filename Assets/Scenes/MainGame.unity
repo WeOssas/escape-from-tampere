@@ -2197,10 +2197,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2931224728587749168, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
-      propertyPath: maxChasingDistance
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 5764818723134814430, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
       propertyPath: m_Name
       value: Zombie (3)
@@ -2248,14 +2244,6 @@ PrefabInstance:
     - target: {fileID: 6578370068538253924, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7091037236069273178, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
-      propertyPath: attackRange
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7495209973588047993, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
-      propertyPath: m_BaseOffset
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}
