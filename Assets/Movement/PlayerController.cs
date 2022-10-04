@@ -28,7 +28,7 @@ namespace escapefromtampere.PlayerControl
 
         private Rigidbody playerRb;
 
-        private InputManager inputManagerr;
+        private InputManager inputManager;
 
         private Animator anim;
 
@@ -48,7 +48,9 @@ namespace escapefromtampere.PlayerControl
 
         private float xRotation;
 
-        private int _zVelHash;
+        private int zVelHash;
+
+        private int crouchHash;
 
         private const float walkSpeed = 2f;
         private const float runSpeed = 6f;
@@ -59,14 +61,15 @@ namespace escapefromtampere.PlayerControl
         {
             hasAnimator = TryGetComponent<Animator>(out anim);
             playerRb = GetComponent<Rigidbody>();
-            inputManagerr = GetComponent<InputManager>();
+            inputManager = GetComponent<InputManager>();
 
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
             jumpHash = Animator.StringToHash("Jump");
             groundHash = Animator.StringToHash("Grounded");
             fallingHash = Animator.StringToHash("Falling");
-            _zVelHash = Animator.StringToHash("Z_Velocity");
+            zVelHash = Animator.StringToHash("Z_Velocity");
+            crouchHash = Animator.StringToHash("Crouch");
 
         }
 
@@ -75,6 +78,7 @@ namespace escapefromtampere.PlayerControl
             SampleGround();
             Move();
             HandleJump();
+            HandleCrouch();
             
         }
         private void LateUpdate()
@@ -86,11 +90,12 @@ namespace escapefromtampere.PlayerControl
         {
             if (!hasAnimator) return;
 
-            float targetSpeed = inputManagerr.Run ? runSpeed : walkSpeed;
-            if(inputManagerr.Move == Vector2.zero) targetSpeed = 0.1f;
+            float targetSpeed = inputManager.Run ? runSpeed : walkSpeed;
+            if (inputManager.Crouch) targetSpeed = 1.5f;
+            if(inputManager.Move == Vector2.zero) targetSpeed = 0.1f;
 
-            currentVelocity.x = Mathf.Lerp(currentVelocity.x, inputManagerr.Move.x * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
-            currentVelocity.y = Mathf.Lerp(currentVelocity.y, inputManagerr.Move.y * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
+            currentVelocity.x = Mathf.Lerp(currentVelocity.x, inputManager.Move.x * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
+            currentVelocity.y = Mathf.Lerp(currentVelocity.y, inputManager.Move.y * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
 
             var xVelDifference = currentVelocity.x - playerRb.velocity.x;
             var zVelDifference = currentVelocity.y - playerRb.velocity.z;
@@ -106,8 +111,8 @@ namespace escapefromtampere.PlayerControl
         {
             if(!hasAnimator) return;
 
-            var Mouse_X = inputManagerr.Look.x;
-            var Mouse_Y = inputManagerr.Look.y;
+            var Mouse_X = inputManager.Look.x;
+            var Mouse_Y = inputManager.Look.y;
             cam.position = camHolder.position;
 
             xRotation -= Mouse_Y * mouseSens * Time.deltaTime;
@@ -117,11 +122,15 @@ namespace escapefromtampere.PlayerControl
             transform.Rotate(Vector3.up, Mouse_X * mouseSens * Time.deltaTime);
         }
 
+        private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
+        
+
+        
         private void HandleJump()
         {
             //Returnataan jos pelaajalle ei ole laitettu animatoria tai hän ei ole hypnnyt
             if (!hasAnimator) return;
-            if (!inputManagerr.Jump) return;
+            if (!inputManager.Jump) return;
             anim.SetTrigger(jumpHash);
             
 
@@ -147,7 +156,7 @@ namespace escapefromtampere.PlayerControl
             }
             
             grounded = false;
-            anim.SetFloat(_zVelHash, playerRb.velocity.y);
+            anim.SetFloat(zVelHash, playerRb.velocity.y);
             SetAnimationGrounding();
             return;
 
