@@ -119,6 +119,7 @@ namespace escapefromtampere.PlayerControl
 
         private void HandleJump()
         {
+            //Returnataan jos pelaajalle ei ole laitettu animatoria tai hän ei ole hypnnyt
             if (!hasAnimator) return;
             if (!inputManagerr.Jump) return;
             anim.SetTrigger(jumpHash);
@@ -154,7 +155,7 @@ namespace escapefromtampere.PlayerControl
 
         void SetAnimationGrounding()
         {
-            Debug.Log(grounded);
+         
             anim.SetBool(fallingHash, !grounded);
             anim.SetBool(groundHash, grounded);
             

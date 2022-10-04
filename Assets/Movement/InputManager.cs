@@ -27,6 +27,7 @@ namespace escapefromtampere.Manager
 
         private void Awake()
         {
+            HideCursor();
             currentMap = playerInput.currentActionMap;
             moveAction = currentMap.FindAction("Move");
             lookAction = currentMap.FindAction("Look");
@@ -45,6 +46,11 @@ namespace escapefromtampere.Manager
 
         }
 
+        private void HideCursor()
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
         private void onMove(InputAction.CallbackContext context)
         {
             Move = context.ReadValue<Vector2>();

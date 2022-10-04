@@ -14,51 +14,19 @@ public class SoldierAi : MonoBehaviour
 
     public GameObject gunBullet;
     public Transform shootPos;
-    public Transform playerPos;
+    public Transform safePos;
 
     private bool inRestrictedArea;
-    private int timesToShoot = 5;
     public bool gotShot;
     public float attackRange;
-    private bool inAttackRange;
+    private bool hasBeenCalled = false;
+   
     
 
     public float pathfindingRange;
     public float maxChasingRange;
 
-    private void AttackOrPatrol()
-    {
-        //If soldier got shot and player is in attack range
-        if (gotShot && inAttackRange)
-        {
-            ChaseAndShoot();
-        }
-
-        //Patrol if soldier haven't been shot or doesn't have a path or player isn't in attack range
-        else if (!gotShot && !agent.hasPath && !inAttackRange)
-        {
-            agent.SetDestination(SearchPath());
-            anim.SetBool("Patrol", true);
-        }
-    }
-
-    public void ChaseAndShoot()
-    {
-
-        if (agent.SetDestination(GetChasingSuggestion()) == false)
-        {
-            gotShot = false;
-            inAttackRange = false;
-            return;
-        }
-
-        transform.LookAt(PlayerInstance.instance.transform);
-        for (int i = 0; i < timesToShoot; i++)
-        {
-            Shoot();
-        }
-
-    }
+    
 
     public void Shoot()
     {
@@ -69,7 +37,8 @@ public class SoldierAi : MonoBehaviour
         
         anim.Play("attack");
         GameObject newBullet = Instantiate(gunBullet, shootPos.position, Quaternion.identity);
-        newBullet.GetComponent<Rigidbody>().AddForce(playerPos.transform.position * 100, ForceMode.Impulse);
+        newBullet.GetComponent<Rigidbody>().AddForce(PlayerInstance.instance.transform.position * 100, ForceMode.Impulse);
+        return;
 
     }
 
@@ -96,6 +65,12 @@ public class SoldierAi : MonoBehaviour
         // If the player is in range, return player position, else null.
         return Vector3.Distance(transform.position, playerPos) <= maxChasingRange ? playerPos : Vector3.zero;
     }
+
+    private void ShootEverySecond()
+    {
+        hasBeenCalled = true;
+        InvokeRepeating("Shoot", 1f, 1f);
+    }
     private void Awake()
     {
         instance = this;
@@ -103,12 +78,38 @@ public class SoldierAi : MonoBehaviour
 
     private void Update()
     {
-        if (Vector3.Distance(transform.position, PlayerInstance.instance.transform.position) <= attackRange)
+        if (gotShot)
         {
-            inAttackRange = true;
-        }
+            if(GetChasingSuggestion() == Vector3.zero)
+            {
+                CancelInvoke();
+                agent.SetDestination(safePos.position);
+                gotShot = false;
+                hasBeenCalled = false;
 
-        AttackOrPatrol();
+            }
+            else
+            {
+                transform.LookAt(PlayerInstance.instance.transform.position);
+                agent.SetDestination(GetChasingSuggestion());
+                if (!hasBeenCalled)
+                {
+                    ShootEverySecond();
+                }
+                
+                
+
+                
+                
+            }
+        }
+        else if (!gotShot && !agent.hasPath)
+        {
+            CancelInvoke();
+            agent.SetDestination(SearchPath());
+            anim.SetBool("Patrol", true);
+        }
+        
         
     }
     private void OnTriggerEnter(Collider other)
