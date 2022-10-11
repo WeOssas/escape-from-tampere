@@ -8,6 +8,7 @@ namespace escapefromtampere.PlayerControl
 {
     public class PlayerController : MonoBehaviour
     {
+        
         [SerializeField] private float animBlendSpeed;
         
         [SerializeField] private Transform camHolder;
@@ -62,7 +63,6 @@ namespace escapefromtampere.PlayerControl
             hasAnimator = TryGetComponent<Animator>(out anim);
             playerRb = GetComponent<Rigidbody>();
             inputManager = GetComponent<InputManager>();
-
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
             jumpHash = Animator.StringToHash("Jump");
@@ -75,6 +75,7 @@ namespace escapefromtampere.PlayerControl
 
         private void FixedUpdate()
         {
+            
             SampleGround();
             Move();
             HandleJump();
