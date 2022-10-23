@@ -16,6 +16,8 @@ namespace escapefromtampere.Manager
         public bool Jump { get; private set; }
 
         public bool Crouch { get; private set; }
+
+        public bool Aim { get; private set; }
         
         private InputActionMap currentMap;
 
@@ -29,6 +31,8 @@ namespace escapefromtampere.Manager
 
         private InputAction crouchAction;
 
+        private InputAction aimAction;
+
         private void Awake()
         {
             HideCursor();
@@ -38,18 +42,21 @@ namespace escapefromtampere.Manager
             runAction = currentMap.FindAction("Run");
             jumpAction = currentMap.FindAction("Jump");
             crouchAction = currentMap.FindAction("Crouch");
+            aimAction = currentMap.FindAction("Aim");
 
             moveAction.performed += onMove;
             lookAction.performed += onLook;
             runAction.performed += onRun;
             jumpAction.performed += onJump;
             crouchAction.started += onCrouch;
+            aimAction.started += onAim;
 
             moveAction.canceled += onMove;
             lookAction.canceled += onLook;
             runAction.canceled += onRun;
             jumpAction.canceled += onJump;
             crouchAction.canceled += onCrouch;
+            aimAction.canceled += onAim;
         }
 
         private void HideCursor()
@@ -80,6 +87,11 @@ namespace escapefromtampere.Manager
         private void onCrouch(InputAction.CallbackContext context)
         {
             Crouch = context.ReadValueAsButton();
+        }
+
+        private void onAim(InputAction.CallbackContext context)
+        {
+            Aim = context.ReadValueAsButton();
         }
 
         private void OnEnable()

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using escapefromtampere.Manager;
+using UnityEngine.Animations.Rigging;
 
 
 namespace escapefromtampere.PlayerControl
@@ -10,10 +11,20 @@ namespace escapefromtampere.PlayerControl
     {
         
         [SerializeField] private float animBlendSpeed;
+
+        [SerializeField] private Rig aimRig;
         
         [SerializeField] private Transform camHolder;
 
+        [SerializeField] private Transform gunAimHolder;
+
+        [SerializeField] private Transform cameraRigTarget;
+
         [SerializeField] private Transform cam;
+
+        [SerializeField] private Transform Gun;
+
+        [SerializeField] private Camera CamSetting;
 
         [SerializeField] private float upperLimit = -40f;
         [SerializeField] private float bottomLimit = 70f;
@@ -53,6 +64,8 @@ namespace escapefromtampere.PlayerControl
 
         private int crouchHash;
 
+        private int aimHash;
+
         private const float walkSpeed = 2f;
         private const float runSpeed = 6f;
 
@@ -70,6 +83,7 @@ namespace escapefromtampere.PlayerControl
             fallingHash = Animator.StringToHash("Falling");
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
+            aimHash = Animator.StringToHash("Aiming");
 
         }
 
@@ -80,6 +94,7 @@ namespace escapefromtampere.PlayerControl
             Move();
             HandleJump();
             HandleCrouch();
+            HandleAim();
             
         }
         private void LateUpdate()
@@ -94,6 +109,10 @@ namespace escapefromtampere.PlayerControl
             float targetSpeed = inputManager.Run ? runSpeed : walkSpeed;
             if (inputManager.Crouch) targetSpeed = 1.5f;
             if(inputManager.Move == Vector2.zero) targetSpeed = 0.1f;
+            if (inputManager.Aim)
+            {
+                targetSpeed = 2f;
+            }
 
             currentVelocity.x = Mathf.Lerp(currentVelocity.x, inputManager.Move.x * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
             currentVelocity.y = Mathf.Lerp(currentVelocity.y, inputManager.Move.y * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
@@ -114,13 +133,13 @@ namespace escapefromtampere.PlayerControl
 
             var Mouse_X = inputManager.Look.x;
             var Mouse_Y = inputManager.Look.y;
-            cam.position = camHolder.position;
 
             xRotation -= Mouse_Y * mouseSens * Time.deltaTime;
             xRotation = Mathf.Clamp(xRotation, upperLimit, bottomLimit);
 
             cam.localRotation = Quaternion.Euler(xRotation,0,0);
             transform.Rotate(Vector3.up, Mouse_X * mouseSens * Time.deltaTime);
+            
         }
 
         private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
@@ -170,6 +189,31 @@ namespace escapefromtampere.PlayerControl
             anim.SetBool(groundHash, grounded);
             
         }
+
+        private void HandleAim() 
+        { 
+            
+            anim.SetBool(aimHash, inputManager.Aim);
+            if (inputManager.Aim)
+            {
+                cam.position = gunAimHolder.position;
+                aimRig.weight = 1f;
+                gunAimHolder.transform.LookAt(cameraRigTarget.transform.position) ;
+              
+
+            }
+            if (!inputManager.Aim)
+            {
+                cam.position = camHolder.position;
+                aimRig.weight = 0f;
+            }
+        } 
+        
+             
+            
+           
+        
+            
     }
 
 

@@ -71,6 +71,15 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""ea9ceaba-8c01-4ca0-bbbf-3ca66de83fe3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -172,6 +181,17 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""action"": ""Crouch"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b9360f91-a685-4211-9c47-0567f8441ce9"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -185,6 +205,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         m_Player1_Run = m_Player1.FindAction("Run", throwIfNotFound: true);
         m_Player1_Jump = m_Player1.FindAction("Jump", throwIfNotFound: true);
         m_Player1_Crouch = m_Player1.FindAction("Crouch", throwIfNotFound: true);
+        m_Player1_Aim = m_Player1.FindAction("Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -249,6 +270,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player1_Run;
     private readonly InputAction m_Player1_Jump;
     private readonly InputAction m_Player1_Crouch;
+    private readonly InputAction m_Player1_Aim;
     public struct Player1Actions
     {
         private @playerControlTest m_Wrapper;
@@ -258,6 +280,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         public InputAction @Run => m_Wrapper.m_Player1_Run;
         public InputAction @Jump => m_Wrapper.m_Player1_Jump;
         public InputAction @Crouch => m_Wrapper.m_Player1_Crouch;
+        public InputAction @Aim => m_Wrapper.m_Player1_Aim;
         public InputActionMap Get() { return m_Wrapper.m_Player1; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -282,6 +305,9 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @Crouch.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnCrouch;
                 @Crouch.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnCrouch;
                 @Crouch.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnCrouch;
+                @Aim.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnAim;
+                @Aim.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnAim;
+                @Aim.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnAim;
             }
             m_Wrapper.m_Player1ActionsCallbackInterface = instance;
             if (instance != null)
@@ -301,6 +327,9 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @Crouch.started += instance.OnCrouch;
                 @Crouch.performed += instance.OnCrouch;
                 @Crouch.canceled += instance.OnCrouch;
+                @Aim.started += instance.OnAim;
+                @Aim.performed += instance.OnAim;
+                @Aim.canceled += instance.OnAim;
             }
         }
     }
@@ -312,5 +341,6 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
     }
 }
