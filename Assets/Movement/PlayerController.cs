@@ -26,6 +26,8 @@ namespace escapefromtampere.PlayerControl
 
         [SerializeField] private Camera CamSetting;
 
+        [SerializeField] private Camera CamSetting2;
+
         [SerializeField] private float upperLimit = -40f;
         [SerializeField] private float bottomLimit = 70f;
 
@@ -193,19 +195,25 @@ namespace escapefromtampere.PlayerControl
         private void HandleAim() 
         { 
             
-            anim.SetBool(aimHash, inputManager.Aim);
+            //anim.SetBool(aimHash, inputManager.Aim);
             if (inputManager.Aim)
             {
-                cam.position = gunAimHolder.position;
-                aimRig.weight = 1f;
-                gunAimHolder.transform.LookAt(cameraRigTarget.transform.position) ;
+                CamSetting.enabled = false;
+                CamSetting2.enabled = true;
+                cam = GameObject.Find("AimCamera").transform;
+                
+                
               
 
             }
+            //aimRig.weight = 1f;
             if (!inputManager.Aim)
             {
+                cam = GameObject.Find("MainCamera").transform;
+                CamSetting2.enabled = false;
+                CamSetting.enabled = true;
                 cam.position = camHolder.position;
-                aimRig.weight = 0f;
+                //aimRig.weight = 0f;
             }
         } 
         
