@@ -37,6 +37,7 @@ namespace escapefromtampere.PlayerControl
 
         [SerializeField] private LayerMask groundCheck;
 
+        private Transform cam2;
 
         private Rigidbody playerRb;
 
@@ -76,6 +77,7 @@ namespace escapefromtampere.PlayerControl
             hasAnimator = TryGetComponent<Animator>(out anim);
             playerRb = GetComponent<Rigidbody>();
             inputManager = GetComponent<InputManager>();
+            cam2 = GameObject.Find("AimCamera").transform;
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
             jumpHash = Animator.StringToHash("Jump");
@@ -84,6 +86,7 @@ namespace escapefromtampere.PlayerControl
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
             aimHash = Animator.StringToHash("Aiming");
+
 
         }
 
@@ -161,6 +164,7 @@ namespace escapefromtampere.PlayerControl
             playerRb.AddForce(-playerRb.velocity.y * Vector3.up, ForceMode.VelocityChange);
             playerRb.AddForce(Vector3.up * jumpFactor, ForceMode.Impulse);
             anim.ResetTrigger(jumpHash);
+           
         }
 
         private void SampleGround()
@@ -191,29 +195,29 @@ namespace escapefromtampere.PlayerControl
         }
 
         private void HandleAim() 
-        { 
-            
+        {
+            cam2.position = aimingPos.position;
             //anim.SetBool(aimHash, inputManager.Aim);
             if (inputManager.Aim)
             {
                 CamSetting.enabled = false;
                 CamSetting2.enabled = true;
-                cam = GameObject.Find("AimCamera").transform;
-                cam.position = aimingPos.position;
-                
-                
-              
+
+                aimRig.weight = 1f;
+
+
+
 
             }
             //aimRig.weight = 1f;
             if (!inputManager.Aim)
             {
-                cam = GameObject.Find("MainCamera").transform;
                 CamSetting2.enabled = false;
                 CamSetting.enabled = true;
-                cam.position = camHolder.position;
-                //aimRig.weight = 0f;
+                
+                aimRig.weight = 0f;
             }
+
         } 
         
              
