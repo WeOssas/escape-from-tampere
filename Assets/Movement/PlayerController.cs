@@ -16,9 +16,7 @@ namespace escapefromtampere.PlayerControl
         
         [SerializeField] private Transform camHolder;
 
-        [SerializeField] private Transform gunAimHolder;
-
-        [SerializeField] private Transform cameraRigTarget;
+        [SerializeField] private Transform aimingPos;
 
         [SerializeField] private Transform cam;
 
@@ -201,6 +199,7 @@ namespace escapefromtampere.PlayerControl
                 CamSetting.enabled = false;
                 CamSetting2.enabled = true;
                 cam = GameObject.Find("AimCamera").transform;
+                cam.position = aimingPos.position;
                 
                 
               
