@@ -13,6 +13,11 @@ public class GunBullet : MonoBehaviour
     
     public float shootingForce;
 
+    // Sounds
+    public AudioSource ShootingSound;
+    public AudioSource ReloadingSound;
+    public AudioSource ReloadingCaseDropSound;
+
     //stats for the gun
     public float timeBetweenShooting, reloadTime, timeBetweenShots;
     public int magazineSize, bulletsPerTap;
@@ -32,12 +37,23 @@ public class GunBullet : MonoBehaviour
 
     public bool allowInvoke = true;
 
+
+    private void Start()
+    {
+        ShootingSound = GetComponent<AudioSource>();
+        ReloadingSound = GetComponent<AudioSource>();
+        ReloadingCaseDropSound = GetComponent<AudioSource>();
+    }
     private void Awake()
     {
         //Making sure that magazine is full
         bulletsLeft = magazineSize;
         readyToShoot = true;
     }
+
+
+
+
 
     private void Update()
     {
@@ -56,6 +72,9 @@ public class GunBullet : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading)
         {
             Reload();
+            Debug.Log("Reloading sound");
+            ReloadingSound.Play();
+            ReloadingCaseDropSound.Play();
         }
 
         //Shooting
@@ -73,6 +92,7 @@ public class GunBullet : MonoBehaviour
         readyToShoot = false;
         WeaponDamage.instance.Shoot();
         
+
         // Direction to shoot towards
         Vector3 bulletDirection = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)).direction;
         
@@ -87,7 +107,11 @@ public class GunBullet : MonoBehaviour
         {
             Instantiate(muzzleFlash, transform.position, Quaternion.identity);
         }
-        
+
+        // Shooting sound play
+        Debug.Log("Shooting sound");
+        ShootingSound.Play();
+
         bulletsLeft--;
         bulletsShot++;
 
@@ -115,7 +139,9 @@ public class GunBullet : MonoBehaviour
     private void Reload()
     {
         reloading = true;
+        
         Invoke(nameof(ReloadFinished), reloadTime);
+        
     }
     private void ReloadFinished()
     {
