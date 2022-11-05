@@ -139,8 +139,10 @@ namespace escapefromtampere.PlayerControl
 
             xRotation -= Mouse_Y * mouseSens * Time.deltaTime;
             xRotation = Mathf.Clamp(xRotation, upperLimit, bottomLimit);
-
-            cam.localRotation = Quaternion.Euler(xRotation,0,0);
+            if(inputManager.Aim)
+                cam2.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            if(!inputManager.Aim)
+                cam.localRotation = Quaternion.Euler(xRotation,0,0);
             transform.Rotate(Vector3.up, Mouse_X * mouseSens * Time.deltaTime);
             
         }
@@ -197,7 +199,7 @@ namespace escapefromtampere.PlayerControl
         private void HandleAim() 
         {
             cam2.position = aimingPos.position;
-            //anim.SetBool(aimHash, inputManager.Aim);
+            anim.SetBool(aimHash, inputManager.Aim);
             if (inputManager.Aim)
             {
                 CamSetting.enabled = false;
