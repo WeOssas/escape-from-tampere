@@ -3,22 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using escapefromtampere.Manager;
 using UnityEngine.Animations.Rigging;
+using Cinemachine;
 
 
 namespace escapefromtampere.PlayerControl
 {
     public class PlayerController : MonoBehaviour
     {
-        
+
         [SerializeField] private float animBlendSpeed;
 
         [SerializeField] private Rig aimRig;
-        
+
         [SerializeField] private Transform camHolder;
 
         [SerializeField] private Transform aimingPos;
-
+        
         [SerializeField] private Transform cam;
+        [SerializeField] private Transform cam2;
+        [SerializeField] private CinemachineFreeLook camVirtualCam;
+        [SerializeField] private CinemachineFreeLook cam2VirtualCam;
 
         [SerializeField] private Transform Gun;
 
@@ -37,7 +41,6 @@ namespace escapefromtampere.PlayerControl
 
         [SerializeField] private LayerMask groundCheck;
 
-        private Transform cam2;
 
         private Rigidbody playerRb;
 
@@ -69,6 +72,10 @@ namespace escapefromtampere.PlayerControl
 
         private const float walkSpeed = 2f;
         private const float runSpeed = 6f;
+        private float turnSmoothVelocity = 0.1f;
+        private float turnSmoothTime = 0.12f;
+        
+        
 
         private Vector2 currentVelocity;
 
@@ -77,7 +84,6 @@ namespace escapefromtampere.PlayerControl
             hasAnimator = TryGetComponent<Animator>(out anim);
             playerRb = GetComponent<Rigidbody>();
             inputManager = GetComponent<InputManager>();
-            cam2 = GameObject.Find("AimCamera").transform;
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
             jumpHash = Animator.StringToHash("Jump");
@@ -85,7 +91,7 @@ namespace escapefromtampere.PlayerControl
             fallingHash = Animator.StringToHash("Falling");
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
-            aimHash = Animator.StringToHash("Aiming");
+            
 
 
         }
@@ -100,15 +106,13 @@ namespace escapefromtampere.PlayerControl
             HandleAim();
             
         }
-        private void LateUpdate()
-        {
-            CameraMovement();
-        }
+        
 
         private void Move()
         {
             if (!hasAnimator) return;
 
+            
             float targetSpeed = inputManager.Run ? runSpeed : walkSpeed;
             if (inputManager.Crouch) targetSpeed = 1.5f;
             if(inputManager.Move == Vector2.zero) targetSpeed = 0.1f;
@@ -123,30 +127,31 @@ namespace escapefromtampere.PlayerControl
             var xVelDifference = currentVelocity.x - playerRb.velocity.x;
             var zVelDifference = currentVelocity.y - playerRb.velocity.z;
 
+            Vector3 move = new Vector3(xVelDifference, 0, zVelDifference);
 
-            playerRb.AddForce(transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference)), ForceMode.VelocityChange);
+            if(move != Vector3.zero)
+            {
+                
+                float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+                transform.localEulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            }
+
+            
+            
+            //float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+           
+            //float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            
+            //transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+            playerRb.AddForce(transform.TransformVector(move), ForceMode.VelocityChange);
             
             anim.SetFloat(xVelHash, currentVelocity.x);
             anim.SetFloat(yVelHash, currentVelocity.y);
         }
 
-        private void CameraMovement()
-        {
-            if(!hasAnimator) return;
-
-            var Mouse_X = inputManager.Look.x;
-            var Mouse_Y = inputManager.Look.y;
-
-            xRotation -= Mouse_Y * mouseSens * Time.deltaTime;
-            xRotation = Mathf.Clamp(xRotation, upperLimit, bottomLimit);
-            if(inputManager.Aim)
-                cam2.localRotation = Quaternion.Euler(xRotation, 0, 0);
-            if(!inputManager.Aim)
-                cam.localRotation = Quaternion.Euler(xRotation,0,0);
-            transform.Rotate(Vector3.up, Mouse_X * mouseSens * Time.deltaTime);
-            
-        }
-
+      
+        
         private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
         
 
@@ -198,29 +203,32 @@ namespace escapefromtampere.PlayerControl
 
         private void HandleAim() 
         {
-            cam2.position = aimingPos.position;
+            
             anim.SetBool(aimHash, inputManager.Aim);
             if (inputManager.Aim)
             {
+                camVirtualCam.enabled = false;
                 CamSetting.enabled = false;
                 CamSetting2.enabled = true;
 
-                aimRig.weight = 1f;
+                aimRig.weight = 0.5f;
 
 
 
 
             }
-            //aimRig.weight = 1f;
+            
             if (!inputManager.Aim)
             {
                 CamSetting2.enabled = false;
                 CamSetting.enabled = true;
+                camVirtualCam.enabled = true;
                 
                 aimRig.weight = 0f;
             }
 
-        } 
+        }
+        
         
              
             
