@@ -40,7 +40,12 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private float disToGround = 10f;
 
         [SerializeField] private LayerMask groundCheck;
+        public bool LockCameraPosition = false;
 
+        private float _cinemachineTargetPitch;
+        private float _cinemachineTargetYaw;
+
+        public GameObject CinemachineCameraTarget;
 
         private Rigidbody playerRb;
 
@@ -70,6 +75,8 @@ namespace escapefromtampere.PlayerControl
 
         private int aimHash;
 
+        private CharacterController characterController;
+        
         private const float walkSpeed = 2f;
         private const float runSpeed = 6f;
         private float turnSmoothVelocity = 0.1f;
@@ -91,7 +98,7 @@ namespace escapefromtampere.PlayerControl
             fallingHash = Animator.StringToHash("Falling");
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
-            
+            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
 
 
         }
@@ -228,13 +235,39 @@ namespace escapefromtampere.PlayerControl
             }
 
         }
-        
-        
-             
+        private void HandleMouse()
+        {
             
-           
-        
             
+            // if there is an input and camera position is not fixed
+            if (inputManager.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
+            {
+                //Don't multiply mouse input by Time.deltaTime;
+                float deltaTimeMultiplier = 1.0f;
+                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
+                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+            }
+            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+            // clamp our rotations so our values are limited 360 degrees
+            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+
+            // Cinemachine will follow this target
+            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
+                _cinemachineTargetYaw, 0.0f);
+            
+        }
+
+        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+        {
+            if (lfAngle < -360f) lfAngle += 360f;
+            if (lfAngle > 360f) lfAngle -= 360f;
+            return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
+
+
+
+
     }
 
 

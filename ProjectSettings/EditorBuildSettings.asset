@@ -11,9 +11,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/JoniScene/Toimivat/PeliScene.unity
     guid: 911875eb09e8bcc46b7c9e6cf632d02d
-  m_configObjects: {}
-  m_Scenes: []
-    path: Assets/Scenes/Tampere.unity
-    guid: a1668b4f44441e34b8fd59402678d0a5
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3920280d83081224b862eab7187b855e, type: 2}
