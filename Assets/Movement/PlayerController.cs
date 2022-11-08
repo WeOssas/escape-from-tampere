@@ -110,7 +110,7 @@ namespace escapefromtampere.PlayerControl
             Move();
             HandleJump();
             HandleCrouch();
-            HandleAim();
+            //HandleAim();
             
         }
         
@@ -140,7 +140,9 @@ namespace escapefromtampere.PlayerControl
             {
                 
                 float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-                transform.localEulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+                transform.rotation = Quaternion.Euler(0f,angle,0);
+                playerRb.AddForce(transform.TransformVector(move), ForceMode.VelocityChange);
             }
 
             
@@ -151,7 +153,7 @@ namespace escapefromtampere.PlayerControl
             
             //transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
-            playerRb.AddForce(transform.TransformVector(move), ForceMode.VelocityChange);
+            
             
             anim.SetFloat(xVelHash, currentVelocity.x);
             anim.SetFloat(yVelHash, currentVelocity.y);
@@ -235,28 +237,7 @@ namespace escapefromtampere.PlayerControl
             }
 
         }
-        private void HandleMouse()
-        {
-            
-            
-            // if there is an input and camera position is not fixed
-            if (inputManager.Look.sqrMagnitude >= _threshold && !LockCameraPosition)
-            {
-                //Don't multiply mouse input by Time.deltaTime;
-                float deltaTimeMultiplier = 1.0f;
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
-            }
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            // clamp our rotations so our values are limited 360 degrees
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-            // Cinemachine will follow this target
-            CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-                _cinemachineTargetYaw, 0.0f);
-            
-        }
+        
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
