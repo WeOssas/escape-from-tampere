@@ -11,7 +11,9 @@ namespace escapefromtampere.PlayerControl
     public class PlayerController : MonoBehaviour
     {
 
-        [SerializeField] private float animBlendSpeed;
+        [SerializeField] private float movementLerpSpeed = 0.85F;
+
+        [SerializeField] private float lookLerpSpeed = 0.1F;
 
         [SerializeField] private Rig aimRig;
 
@@ -77,8 +79,8 @@ namespace escapefromtampere.PlayerControl
 
         private CharacterController characterController;
         
-        private const float walkSpeed = 2f;
-        private const float runSpeed = 6f;
+        private const float walkSpeed = 4f;
+        private const float runSpeed = 12f;
         private float turnSmoothVelocity = 0.1f;
         private float turnSmoothTime = 0.12f;
         
@@ -111,52 +113,38 @@ namespace escapefromtampere.PlayerControl
             HandleJump();
             HandleCrouch();
             //HandleAim();
-            
         }
-        
 
         private void Move()
         {
             if (!hasAnimator) return;
 
+            float speedMultiplier;
+            if (inputManager.Run) speedMultiplier = runSpeed;
+            else if (inputManager.Crouch) speedMultiplier = 1.5f;
+            else if (inputManager.Aim) speedMultiplier = 2f;
+            else speedMultiplier = walkSpeed;
+
+            Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
             
-            float targetSpeed = inputManager.Run ? runSpeed : walkSpeed;
-            if (inputManager.Crouch) targetSpeed = 1.5f;
-            if(inputManager.Move == Vector2.zero) targetSpeed = 0.1f;
+            Vector3 movementInput = new Vector3(inputManager.Move.x, 0f, inputManager.Move.y) * speedMultiplier;
+            if (movementInput != Vector3.zero)
+            {
+                Vector3 rotatedMovement = cameraDirection * movementInput;
+                rotatedMovement.y = 0f; // Lock movement to the XZ plane so the player can't start flying.
+                playerRb.velocity = Vector3.Lerp(playerRb.velocity, rotatedMovement, movementLerpSpeed);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
+            }
+
             if (inputManager.Aim)
             {
-                targetSpeed = 2f;
+                transform.rotation = cameraDirection;
             }
-
-            currentVelocity.x = Mathf.Lerp(currentVelocity.x, inputManager.Move.x * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
-            currentVelocity.y = Mathf.Lerp(currentVelocity.y, inputManager.Move.y * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
-
-            var xVelDifference = currentVelocity.x - playerRb.velocity.x;
-            var zVelDifference = currentVelocity.y - playerRb.velocity.z;
-
-            Vector3 move = new Vector3(xVelDifference, 0, zVelDifference);
-
-            if(move != Vector3.zero)
-            {
-                
-                float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-                transform.rotation = Quaternion.Euler(0f,angle,0);
-                playerRb.AddForce(transform.TransformVector(move), ForceMode.VelocityChange);
-            }
-
             
-            
-            //float targetAngle = Mathf.Atan2(move.x, move.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-           
-            //float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            
-            //transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            
-            
-            anim.SetFloat(xVelHash, currentVelocity.x);
-            anim.SetFloat(yVelHash, currentVelocity.y);
+            // Update animation
+            Vector3 animationVelocity = Quaternion.Inverse(transform.rotation) * playerRb.velocity;
+            anim.SetFloat(xVelHash, animationVelocity.x);
+            anim.SetFloat(yVelHash, animationVelocity.z);
         }
 
       
