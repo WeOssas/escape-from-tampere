@@ -77,7 +77,7 @@ namespace escapefromtampere.PlayerControl
 
         private int aimHash;
 
-        private CharacterController characterController;
+        private WeaponArsenal weaponArsenal;
         
         private const float walkSpeed = 4f;
         private const float runSpeed = 12f;
@@ -93,6 +93,7 @@ namespace escapefromtampere.PlayerControl
             hasAnimator = TryGetComponent<Animator>(out anim);
             playerRb = GetComponent<Rigidbody>();
             inputManager = GetComponent<InputManager>();
+            weaponArsenal = GetComponent<WeaponArsenal>();
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
             jumpHash = Animator.StringToHash("Jump");
@@ -155,7 +156,14 @@ namespace escapefromtampere.PlayerControl
 
         private void HandleGunSwitch()
         {
-            if(inputManage)
+            if (inputManager.Shotgun)
+                weaponArsenal.SetArsenal("shotgun");
+            if (inputManager.Rifle)
+                weaponArsenal.SetArsenal("rifle");
+            if (inputManager.Pistol)
+                weaponArsenal.SetArsenal("pistol");
+            
+
         }
         private void HandleJump()
         {
