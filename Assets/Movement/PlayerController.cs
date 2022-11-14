@@ -112,6 +112,7 @@ namespace escapefromtampere.PlayerControl
             Move();
             HandleJump();
             HandleCrouch();
+            HandleGunSwitch();
             //HandleAim();
         }
 
@@ -150,9 +151,12 @@ namespace escapefromtampere.PlayerControl
       
         
         private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
-        
 
-        
+
+        private void HandleGunSwitch()
+        {
+            if(inputManage)
+        }
         private void HandleJump()
         {
             //Returnataan jos pelaajalle ei ole laitettu animatoria tai hän ei ole hypnnyt

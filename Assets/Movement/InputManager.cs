@@ -18,7 +18,15 @@ namespace escapefromtampere.Manager
         public bool Crouch { get; private set; }
 
         public bool Aim { get; private set; }
-        
+
+        public bool Rifle { get; private set; }
+
+        public bool Shotgun { get; private set; }
+
+        public bool Pistol { get; private set; }
+
+
+
         private InputActionMap currentMap;
 
         private InputAction moveAction;
@@ -33,6 +41,12 @@ namespace escapefromtampere.Manager
 
         private InputAction aimAction;
 
+        private InputAction rifleAction;
+
+        private InputAction shotgunAction;
+
+        private InputAction pistolAction;
+
         private void Awake()
         {
             HideCursor();
@@ -43,6 +57,9 @@ namespace escapefromtampere.Manager
             jumpAction = currentMap.FindAction("Jump");
             crouchAction = currentMap.FindAction("Crouch");
             aimAction = currentMap.FindAction("Aim");
+            rifleAction = currentMap.FindAction("Rifle");
+            shotgunAction = currentMap.FindAction("Shotgun");
+            pistolAction = currentMap.FindAction("Pistol");
 
             moveAction.performed += onMove;
             lookAction.performed += onLook;
@@ -50,6 +67,10 @@ namespace escapefromtampere.Manager
             jumpAction.performed += onJump;
             crouchAction.started += onCrouch;
             aimAction.started += onAim;
+            rifleAction.performed += onRifle;
+            shotgunAction.performed += onShotgun;
+            pistolAction.performed += onPistol;
+
 
             moveAction.canceled += onMove;
             lookAction.canceled += onLook;
@@ -57,6 +78,9 @@ namespace escapefromtampere.Manager
             jumpAction.canceled += onJump;
             crouchAction.canceled += onCrouch;
             aimAction.canceled += onAim;
+            rifleAction.canceled += onRifle;
+            shotgunAction.canceled += onShotgun;
+            pistolAction.canceled += onPistol;
         }
 
         private void HideCursor()
@@ -92,6 +116,21 @@ namespace escapefromtampere.Manager
         private void onAim(InputAction.CallbackContext context)
         {
             Aim = context.ReadValueAsButton();
+        }
+
+        private void onRifle(InputAction.CallbackContext context)
+        {
+            Rifle = context.ReadValueAsButton();
+        }
+
+        private void onShotgun(InputAction.CallbackContext context)
+        {
+            Shotgun = context.ReadValueAsButton();
+        }
+
+        private void onPistol(InputAction.CallbackContext context)
+        {
+            Pistol = context.ReadValueAsButton();
         }
 
         private void OnEnable()
