@@ -6,13 +6,25 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Menu.unity
+    path: Assets/Scenes/Pelin kaikki scenet/StartingScene.unity
+    guid: cdb49e5550ef2ec45ab076e7a5ae1290
+  - enabled: 1
+    path: Assets/Scenes/Pelin kaikki scenet/Main.unity
     guid: a38426ed316dbdf47af5117f2115a88b
   - enabled: 1
     path: Assets/Scenes/MainGame.unity
     guid: 232867e3f9898ca4092c4b9e2aa19d1e
   - enabled: 1
-    path: Assets/Scenes/Tampere.unity
+    path: Assets/Scenes/Pelin kaikki scenet/Tampere.unity
     guid: a1668b4f44441e34b8fd59402678d0a5
+  - enabled: 1
+    path: Assets/Scenes/Pelin kaikki scenet/RetryScene.unity
+    guid: 3fa1110b6545f7a4ab3a87c99adc929d
+  - enabled: 1
+    path: Assets/Scenes/Pelin kaikki scenet/SoundScene.unity
+    guid: 601257a373746ca46a3efe9a99f649e7
+  - enabled: 1
+    path: Assets/Scenes/Pelin kaikki scenet/CreditsScene.unity
+    guid: 99c2e28249a91e045aba64b0111ae1df
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 3920280d83081224b862eab7187b855e, type: 2}
