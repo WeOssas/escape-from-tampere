@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class itemPickup : Interactable
 {
+
+    public Item item;
+    
     public override void Interact()
     {
         base.Interact();
@@ -13,8 +16,8 @@ public class itemPickup : Interactable
 
     void PickUp()
     {
-        Debug.Log("You picked up an item!");
-        //Add item to inventory (in this case a hand sanitizer)
+        Debug.Log("You picked up " + item.name + "!");
+        Inventory.Instance.Add(item);
         Destroy(gameObject);
 
     }

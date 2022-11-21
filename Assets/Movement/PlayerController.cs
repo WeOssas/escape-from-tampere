@@ -153,12 +153,7 @@ namespace escapefromtampere.PlayerControl
             anim.SetFloat(xVelHash, animationVelocity.x);
             anim.SetFloat(yVelHash, animationVelocity.z);
         }
-
-      
-        
         private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
-
-
         private void HandleGunSwitch()
         {
             if (inputManager.Shotgun)
@@ -172,8 +167,6 @@ namespace escapefromtampere.PlayerControl
                 Destroy(rightGunBone.GetChild(0).gameObject);
                 anim.SetBool("HoldingBigGun", false);
             }
-
-
         }
         private void HandleJump()
         {
@@ -181,8 +174,6 @@ namespace escapefromtampere.PlayerControl
             if (!hasAnimator) return;
             if (!inputManager.Jump) return;
             anim.SetTrigger(jumpHash);
-            
-
         }
 
         public void JumpAddForce()
@@ -190,7 +181,6 @@ namespace escapefromtampere.PlayerControl
             playerRb.AddForce(-playerRb.velocity.y * Vector3.up, ForceMode.VelocityChange);
             playerRb.AddForce(Vector3.up * jumpFactor, ForceMode.Impulse);
             anim.ResetTrigger(jumpHash);
-           
         }
 
         private void SampleGround()
@@ -231,10 +221,6 @@ namespace escapefromtampere.PlayerControl
                 //CamSetting2.enabled = true;
 
                 aimRig.weight = 0.5f;
-
-
-
-
             }
             
             if (!inputManager.Aim)
@@ -247,17 +233,12 @@ namespace escapefromtampere.PlayerControl
             }
 
         }
-        
-
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
             if (lfAngle < -360f) lfAngle += 360f;
             if (lfAngle > 360f) lfAngle -= 360f;
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
-
-
-
 
     }
 

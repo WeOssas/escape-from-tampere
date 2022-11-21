@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fcbb51a7aa7f314ab94fac755cab446, type: 3}
-  m_Name: New item
+  m_Name: Test Item
   m_EditorClassIdentifier: 
-  name: New item
+  name: Spray
   icon: {fileID: 0}
   isDefaultItem: 0
