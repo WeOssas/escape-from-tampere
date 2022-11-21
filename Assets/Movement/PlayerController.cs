@@ -2,17 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using escapefromtampere.Manager;
+using UnityEngine.Animations.Rigging;
+using Cinemachine;
 
 
 namespace escapefromtampere.PlayerControl
 {
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private float animBlendSpeed;
-        
+
+        [SerializeField] private float movementLerpSpeed = 0.85F;
+
+        [SerializeField] private float lookLerpSpeed = 0.1F;
+
+        [SerializeField] private Rig aimRig;
+
         [SerializeField] private Transform camHolder;
 
+        [SerializeField] private Transform aimingPos;
+
+        [SerializeField] private Transform rightGunBone;
+        
         [SerializeField] private Transform cam;
+        
+        [SerializeField] private CinemachineFreeLook camVirtualCam;
+       
+        [SerializeField] private Transform Gun;
+
+        [SerializeField] private Camera CamSetting;
 
         [SerializeField] private float upperLimit = -40f;
         [SerializeField] private float bottomLimit = 70f;
@@ -24,13 +41,22 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private float disToGround = 10f;
 
         [SerializeField] private LayerMask groundCheck;
+        public bool LockCameraPosition = false;
 
+        private float _cinemachineTargetPitch;
+        private float _cinemachineTargetYaw;
+
+        public GameObject CinemachineCameraTarget;
 
         private Rigidbody playerRb;
 
-        private InputManager inputManagerr;
+        private InputManager inputManager;
 
         private Animator anim;
+
+        private bool holdingGun;
+
+        private bool holdingHandGun;
 
         private bool hasAnimator;
 
@@ -48,10 +74,21 @@ namespace escapefromtampere.PlayerControl
 
         private float xRotation;
 
-        private int _zVelHash;
+        private int zVelHash;
 
-        private const float walkSpeed = 2f;
-        private const float runSpeed = 6f;
+        private int crouchHash;
+
+        private int aimHash;
+
+        private WeaponArsenal weaponArsenal;
+
+        
+        private const float walkSpeed = 4f;
+        private const float runSpeed = 12f;
+        private float turnSmoothVelocity = 0.1f;
+        private float turnSmoothTime = 0.12f;
+        
+        
 
         private Vector2 currentVelocity;
 
@@ -59,72 +96,84 @@ namespace escapefromtampere.PlayerControl
         {
             hasAnimator = TryGetComponent<Animator>(out anim);
             playerRb = GetComponent<Rigidbody>();
-            inputManagerr = GetComponent<InputManager>();
-
+            inputManager = GetComponent<InputManager>();
+            weaponArsenal = GetComponent<WeaponArsenal>();
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
             jumpHash = Animator.StringToHash("Jump");
             groundHash = Animator.StringToHash("Grounded");
             fallingHash = Animator.StringToHash("Falling");
-            _zVelHash = Animator.StringToHash("Z_Velocity");
+            zVelHash = Animator.StringToHash("Z_Velocity");
+            crouchHash = Animator.StringToHash("Crouch");
+            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+
 
         }
 
         private void FixedUpdate()
         {
+            
             SampleGround();
             Move();
             HandleJump();
-            
-        }
-        private void LateUpdate()
-        {
-            CameraMovement();
+            HandleCrouch();
+            HandleGunSwitch();
+            //HandleAim();
         }
 
         private void Move()
         {
             if (!hasAnimator) return;
 
-            float targetSpeed = inputManagerr.Run ? runSpeed : walkSpeed;
-            if(inputManagerr.Move == Vector2.zero) targetSpeed = 0.1f;
 
-            currentVelocity.x = Mathf.Lerp(currentVelocity.x, inputManagerr.Move.x * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
-            currentVelocity.y = Mathf.Lerp(currentVelocity.y, inputManagerr.Move.y * targetSpeed, animBlendSpeed * Time.fixedDeltaTime);
+            float speedMultiplier;
+            if (inputManager.Run) speedMultiplier = runSpeed;
+            else if (inputManager.Crouch) speedMultiplier = 1.5f;
+            else if (inputManager.Aim) speedMultiplier = 2f;
+            else speedMultiplier = walkSpeed;
 
-            var xVelDifference = currentVelocity.x - playerRb.velocity.x;
-            var zVelDifference = currentVelocity.y - playerRb.velocity.z;
-
-
-            playerRb.AddForce(transform.TransformVector(new Vector3(xVelDifference, 0, zVelDifference)), ForceMode.VelocityChange);
+            Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
             
-            anim.SetFloat(xVelHash, currentVelocity.x);
-            anim.SetFloat(yVelHash, currentVelocity.y);
-        }
+            Vector3 movementInput = new Vector3(inputManager.Move.x, 0f, inputManager.Move.y) * speedMultiplier;
+            if (movementInput != Vector3.zero & grounded)
+            {
+                Vector3 rotatedMovement = cameraDirection * movementInput;
+                rotatedMovement.y = 0f; // Lock movement to the XZ plane so the player can't start flying.
+                playerRb.velocity = Vector3.Lerp(playerRb.velocity, rotatedMovement, movementLerpSpeed);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
+            }
 
-        private void CameraMovement()
+            if (inputManager.Aim & grounded)
+            {
+                transform.rotation = cameraDirection;
+            }
+            
+            // Update animation
+            Vector3 animationVelocity = Quaternion.Inverse(transform.rotation) * playerRb.velocity;
+            anim.SetFloat(xVelHash, animationVelocity.x);
+            anim.SetFloat(yVelHash, animationVelocity.z);
+        }
+        private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
+        private void HandleGunSwitch()
         {
-            if(!hasAnimator) return;
-
-            var Mouse_X = inputManagerr.Look.x;
-            var Mouse_Y = inputManagerr.Look.y;
-            cam.position = camHolder.position;
-
-            xRotation -= Mouse_Y * mouseSens * Time.deltaTime;
-            xRotation = Mathf.Clamp(xRotation, upperLimit, bottomLimit);
-
-            cam.localRotation = Quaternion.Euler(xRotation,0,0);
-            transform.Rotate(Vector3.up, Mouse_X * mouseSens * Time.deltaTime);
+            if (inputManager.Shotgun)
+                weaponArsenal.SetArsenal("shotgun");
+            if (inputManager.Rifle)
+                weaponArsenal.SetArsenal("rifle");
+            if (inputManager.Pistol)
+                weaponArsenal.SetArsenal("pistol");
+            if (inputManager.Holster)
+            {
+                Destroy(rightGunBone.GetChild(0).gameObject);
+                anim.SetBool("HoldingBigGun", false);
+            }
         }
-
         private void HandleJump()
         {
             //Returnataan jos pelaajalle ei ole laitettu animatoria tai hän ei ole hypnnyt
             if (!hasAnimator) return;
-            if (!inputManagerr.Jump) return;
+            if (!inputManager.Jump) return;
             anim.SetTrigger(jumpHash);
-            
-
         }
 
         public void JumpAddForce()
@@ -147,7 +196,7 @@ namespace escapefromtampere.PlayerControl
             }
             
             grounded = false;
-            anim.SetFloat(_zVelHash, playerRb.velocity.y);
+            anim.SetFloat(zVelHash, playerRb.velocity.y);
             SetAnimationGrounding();
             return;
 
@@ -160,6 +209,37 @@ namespace escapefromtampere.PlayerControl
             anim.SetBool(groundHash, grounded);
             
         }
+
+        private void HandleAim() 
+        {
+            
+            anim.SetBool(aimHash, inputManager.Aim);
+            if (inputManager.Aim)
+            {
+                camVirtualCam.enabled = false;
+                CamSetting.enabled = false;
+                //CamSetting2.enabled = true;
+
+                aimRig.weight = 0.5f;
+            }
+            
+            if (!inputManager.Aim)
+            {
+                //CamSetting2.enabled = false;
+                CamSetting.enabled = true;
+                camVirtualCam.enabled = true;
+                
+                aimRig.weight = 0f;
+            }
+
+        }
+        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+        {
+            if (lfAngle < -360f) lfAngle += 360f;
+            if (lfAngle > 360f) lfAngle -= 360f;
+            return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
+
     }
 
 
