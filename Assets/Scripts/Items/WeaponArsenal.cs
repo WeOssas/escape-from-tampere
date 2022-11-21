@@ -48,6 +48,10 @@ public class WeaponArsenal : MonoBehaviour
         public GameObject leftGun;
         
     }
+    private struct Inventory
+    {
+        //TODO
+    }
 
 
 

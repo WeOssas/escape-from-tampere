@@ -20,17 +20,16 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private Transform camHolder;
 
         [SerializeField] private Transform aimingPos;
+
+        [SerializeField] private Transform rightGunBone;
         
         [SerializeField] private Transform cam;
-        [SerializeField] private Transform cam2;
+        
         [SerializeField] private CinemachineFreeLook camVirtualCam;
-        [SerializeField] private CinemachineFreeLook cam2VirtualCam;
-
+       
         [SerializeField] private Transform Gun;
 
         [SerializeField] private Camera CamSetting;
-
-        [SerializeField] private Camera CamSetting2;
 
         [SerializeField] private float upperLimit = -40f;
         [SerializeField] private float bottomLimit = 70f;
@@ -55,6 +54,10 @@ namespace escapefromtampere.PlayerControl
 
         private Animator anim;
 
+        private bool holdingGun;
+
+        private bool holdingHandGun;
+
         private bool hasAnimator;
 
         private bool grounded;
@@ -78,6 +81,7 @@ namespace escapefromtampere.PlayerControl
         private int aimHash;
 
         private WeaponArsenal weaponArsenal;
+
         
         private const float walkSpeed = 4f;
         private const float runSpeed = 12f;
@@ -121,6 +125,7 @@ namespace escapefromtampere.PlayerControl
         {
             if (!hasAnimator) return;
 
+
             float speedMultiplier;
             if (inputManager.Run) speedMultiplier = runSpeed;
             else if (inputManager.Crouch) speedMultiplier = 1.5f;
@@ -130,7 +135,7 @@ namespace escapefromtampere.PlayerControl
             Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
             
             Vector3 movementInput = new Vector3(inputManager.Move.x, 0f, inputManager.Move.y) * speedMultiplier;
-            if (movementInput != Vector3.zero)
+            if (movementInput != Vector3.zero & grounded)
             {
                 Vector3 rotatedMovement = cameraDirection * movementInput;
                 rotatedMovement.y = 0f; // Lock movement to the XZ plane so the player can't start flying.
@@ -138,7 +143,7 @@ namespace escapefromtampere.PlayerControl
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
             }
 
-            if (inputManager.Aim)
+            if (inputManager.Aim & grounded)
             {
                 transform.rotation = cameraDirection;
             }
@@ -162,7 +167,12 @@ namespace escapefromtampere.PlayerControl
                 weaponArsenal.SetArsenal("rifle");
             if (inputManager.Pistol)
                 weaponArsenal.SetArsenal("pistol");
-            
+            if (inputManager.Holster)
+            {
+                Destroy(rightGunBone.GetChild(0).gameObject);
+                anim.SetBool("HoldingBigGun", false);
+            }
+
 
         }
         private void HandleJump()
@@ -218,7 +228,7 @@ namespace escapefromtampere.PlayerControl
             {
                 camVirtualCam.enabled = false;
                 CamSetting.enabled = false;
-                CamSetting2.enabled = true;
+                //CamSetting2.enabled = true;
 
                 aimRig.weight = 0.5f;
 
@@ -229,7 +239,7 @@ namespace escapefromtampere.PlayerControl
             
             if (!inputManager.Aim)
             {
-                CamSetting2.enabled = false;
+                //CamSetting2.enabled = false;
                 CamSetting.enabled = true;
                 camVirtualCam.enabled = true;
                 

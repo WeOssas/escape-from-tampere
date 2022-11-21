@@ -25,6 +25,10 @@ namespace escapefromtampere.Manager
 
         public bool Pistol { get; private set; }
 
+        public bool Holster { get; private set; }
+
+        public bool Interact { get; private set; }
+
 
 
         private InputActionMap currentMap;
@@ -47,6 +51,10 @@ namespace escapefromtampere.Manager
 
         private InputAction pistolAction;
 
+        private InputAction holsterAction;
+
+        private InputAction interAction;
+
         private void Awake()
         {
             HideCursor();
@@ -60,6 +68,8 @@ namespace escapefromtampere.Manager
             rifleAction = currentMap.FindAction("Rifle");
             shotgunAction = currentMap.FindAction("Shotgun");
             pistolAction = currentMap.FindAction("Pistol");
+            holsterAction = currentMap.FindAction("Holster");
+            interAction = currentMap.FindAction("Interact");
 
             moveAction.performed += onMove;
             lookAction.performed += onLook;
@@ -70,6 +80,8 @@ namespace escapefromtampere.Manager
             rifleAction.performed += onRifle;
             shotgunAction.performed += onShotgun;
             pistolAction.performed += onPistol;
+            holsterAction.performed += onHolster;
+            interAction.performed += onInteract;
 
 
             moveAction.canceled += onMove;
@@ -81,6 +93,8 @@ namespace escapefromtampere.Manager
             rifleAction.canceled += onRifle;
             shotgunAction.canceled += onShotgun;
             pistolAction.canceled += onPistol;
+            holsterAction.canceled += onHolster;
+            interAction.canceled += onInteract;
         }
 
         private void HideCursor()
@@ -133,6 +147,15 @@ namespace escapefromtampere.Manager
             Pistol = context.ReadValueAsButton();
         }
 
+        private void onHolster(InputAction.CallbackContext context)
+        {
+            Holster = context.ReadValueAsButton();
+        }
+
+        private void onInteract(InputAction.CallbackContext context)
+        {
+            Interact = context.ReadValueAsButton();
+        }
         private void OnEnable()
         {
             currentMap.Enable();

@@ -107,6 +107,24 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Holster"",
+                    ""type"": ""Button"",
+                    ""id"": ""a7b107aa-ae56-462a-bda7-0d9d9acb0d2e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""2327041b-7fc8-4b5f-b7cf-afe7dd0fd746"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -252,6 +270,28 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""action"": ""Pistol"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a15c04ce-3579-4ac3-881a-60e1a6ca81c4"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Holster"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0e4b5ef3-fa71-4bad-83bb-a006ffd920fa"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -269,6 +309,8 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         m_Player1_Rifle = m_Player1.FindAction("Rifle", throwIfNotFound: true);
         m_Player1_Shotgun = m_Player1.FindAction("Shotgun", throwIfNotFound: true);
         m_Player1_Pistol = m_Player1.FindAction("Pistol", throwIfNotFound: true);
+        m_Player1_Holster = m_Player1.FindAction("Holster", throwIfNotFound: true);
+        m_Player1_Interact = m_Player1.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -337,6 +379,8 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player1_Rifle;
     private readonly InputAction m_Player1_Shotgun;
     private readonly InputAction m_Player1_Pistol;
+    private readonly InputAction m_Player1_Holster;
+    private readonly InputAction m_Player1_Interact;
     public struct Player1Actions
     {
         private @playerControlTest m_Wrapper;
@@ -350,6 +394,8 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         public InputAction @Rifle => m_Wrapper.m_Player1_Rifle;
         public InputAction @Shotgun => m_Wrapper.m_Player1_Shotgun;
         public InputAction @Pistol => m_Wrapper.m_Player1_Pistol;
+        public InputAction @Holster => m_Wrapper.m_Player1_Holster;
+        public InputAction @Interact => m_Wrapper.m_Player1_Interact;
         public InputActionMap Get() { return m_Wrapper.m_Player1; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -386,6 +432,12 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @Pistol.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnPistol;
                 @Pistol.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnPistol;
                 @Pistol.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnPistol;
+                @Holster.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnHolster;
+                @Holster.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnHolster;
+                @Holster.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnHolster;
+                @Interact.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_Player1ActionsCallbackInterface = instance;
             if (instance != null)
@@ -417,6 +469,12 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @Pistol.started += instance.OnPistol;
                 @Pistol.performed += instance.OnPistol;
                 @Pistol.canceled += instance.OnPistol;
+                @Holster.started += instance.OnHolster;
+                @Holster.performed += instance.OnHolster;
+                @Holster.canceled += instance.OnHolster;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -432,5 +490,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         void OnRifle(InputAction.CallbackContext context);
         void OnShotgun(InputAction.CallbackContext context);
         void OnPistol(InputAction.CallbackContext context);
+        void OnHolster(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
