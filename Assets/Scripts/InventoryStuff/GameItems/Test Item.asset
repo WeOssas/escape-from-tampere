@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Test Item
   m_EditorClassIdentifier: 
   name: Spray
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: cfd9d1ca9bd2dd1459e2efcff9341e77, type: 3}
   isDefaultItem: 0

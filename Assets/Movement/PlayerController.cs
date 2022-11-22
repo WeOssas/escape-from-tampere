@@ -118,7 +118,17 @@ namespace escapefromtampere.PlayerControl
             HandleJump();
             HandleCrouch();
             HandleGunSwitch();
-            //HandleAim();
+            //HandleAimAndMouse();
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = true;
+            }
+            if (Input.GetKeyDown(KeyCode.RightAlt))
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
 
         private void Move()
@@ -210,7 +220,7 @@ namespace escapefromtampere.PlayerControl
             
         }
 
-        private void HandleAim() 
+        private void HandleAimAndMouse() 
         {
             
             anim.SetBool(aimHash, inputManager.Aim);
@@ -233,12 +243,7 @@ namespace escapefromtampere.PlayerControl
             }
 
         }
-        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
-        {
-            if (lfAngle < -360f) lfAngle += 360f;
-            if (lfAngle > 360f) lfAngle -= 360f;
-            return Mathf.Clamp(lfAngle, lfMin, lfMax);
-        }
+        
 
     }
 
