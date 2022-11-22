@@ -6,7 +6,7 @@ public class Inventory : MonoBehaviour
 {
     public static Inventory Instance;
     public GameObject inventoryUI;
-    
+
     public List<Item> items = new List<Item>();
 
     private bool inventoryFull = false;
@@ -16,7 +16,8 @@ public class Inventory : MonoBehaviour
 
     public int space = 20;
 
-    
+
+
 
     private void Awake()
     {
@@ -29,7 +30,7 @@ public class Inventory : MonoBehaviour
         // If we pass the test
         Instance = this;
 
-       
+
     }
     private void Update()
     {
@@ -42,9 +43,9 @@ public class Inventory : MonoBehaviour
 
 
     public bool Add(Item item)
-    { 
+    {
     /* Add method is used to add items to inventory */
-        
+
         //If item is default, let's not add it to inventory
         if(!item.isDefaultItem)
         {
@@ -56,14 +57,14 @@ public class Inventory : MonoBehaviour
             items.Add(item);
             if (onItemChangedCallback != null)
                 onItemChangedCallback.Invoke();
-        }   
+        }
         return true;
-            
+
     }
     public void Remove(Item item)
     {
     /* Remove methhod is used to remove items from inventory */
-        
+
         items.Remove(item);
         if (onItemChangedCallback != null)
             onItemChangedCallback.Invoke();
