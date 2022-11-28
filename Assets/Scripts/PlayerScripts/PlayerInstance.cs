@@ -10,12 +10,19 @@ using UnityEngine.SceneManagement;
 public class PlayerInstance : MonoBehaviour
 {
     public static PlayerInstance instance;
+    public int health;
     
     public void Awake()
     {
         instance = this;
     }
-
+    private void Update()
+    {
+        if(health == 0)
+        {
+            //TODO
+        }
+    }
     public void OnDestroy()
     {
         // When the player dies, reload the current scene.

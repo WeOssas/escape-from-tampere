@@ -4,11 +4,4 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/Menu.unity
-    guid: a38426ed316dbdf47af5117f2115a88b
-  - enabled: 1
-    path: Assets/Scenes/JoniScene/Toimivat/PeliScene.unity
-    guid: 911875eb09e8bcc46b7c9e6cf632d02d
-  m_configObjects: {}
+  m_Scenes: []

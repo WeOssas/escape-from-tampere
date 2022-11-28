@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fcbb51a7aa7f314ab94fac755cab446, type: 3}
   m_Name: Hp buff
   m_EditorClassIdentifier: 
-  name: Health
-  icon: {fileID: 0}
+  name: Adrenaline
+  icon: {fileID: 21300000, guid: 7fc6fcddd1250dc46995990ee1e733c8, type: 3}
   isDefaultItem: 0
+  itemType: Health
