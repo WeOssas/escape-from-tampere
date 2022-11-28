@@ -6,21 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Pelin kaikki scenet/StartingScene.unity
+    guid: cdb49e5550ef2ec45ab076e7a5ae1290
+  - enabled: 1
     path: Assets/Scenes/Menu.unity
     guid: a38426ed316dbdf47af5117f2115a88b
-  - enabled: 1
-    path: Assets/Scenes/JoniScene/Toimivat/PeliScene.unity
-    guid: 911875eb09e8bcc46b7c9e6cf632d02d
   - enabled: 1
     path: Assets/Scenes/Tampere.unity
     guid: a1668b4f44441e34b8fd59402678d0a5
   - enabled: 1
-    path: Assets/Scenes/Pelin kaikki scenet/EndScene.unity
-    guid: d9c369a44f79db84ab3538a0f7c5c9d5
-  - enabled: 1
     path: Assets/Scenes/Pelin kaikki scenet/RetryScene.unity
     guid: 3fa1110b6545f7a4ab3a87c99adc929d
   - enabled: 1
-    path: Assets/Scenes/Pelin kaikki scenet/StartingScene.unity
-    guid: cdb49e5550ef2ec45ab076e7a5ae1290
+    path: Assets/Scenes/Pelin kaikki scenet/EndScene.unity
+    guid: d9c369a44f79db84ab3538a0f7c5c9d5
   m_configObjects: {}
