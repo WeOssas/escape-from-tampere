@@ -6,6 +6,7 @@ using UnityEngine.Animations.Rigging;
 using Cinemachine;
 
 
+
 namespace escapefromtampere.PlayerControl
 {
     public class PlayerController : MonoBehaviour
@@ -24,10 +25,6 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private Transform rightGunBone;
         
         [SerializeField] private Transform cam;
-        
-        [SerializeField] private CinemachineFreeLook camVirtualCam;
-
-        [SerializeField] private Camera CamSetting;
 
         [SerializeField] private float upperLimit = -40f;
         [SerializeField] private float bottomLimit = 70f;
@@ -41,9 +38,6 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private LayerMask groundCheck;
         public bool LockCameraPosition = false;
 
-        private float _cinemachineTargetPitch;
-        private float _cinemachineTargetYaw;
-
         public GameObject CinemachineCameraTarget;
 
         private Rigidbody playerRb;
@@ -55,10 +49,6 @@ namespace escapefromtampere.PlayerControl
         private Transform gunChild;
 
         private Animator anim;
-
-        private bool holdingGun;
-
-        private bool holdingHandGun;
 
         private bool hasAnimator;
 
@@ -109,7 +99,7 @@ namespace escapefromtampere.PlayerControl
             fallingHash = Animator.StringToHash("Falling");
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
-            _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
+           
 
 
         }
@@ -123,7 +113,6 @@ namespace escapefromtampere.PlayerControl
             HandleCrouch();
             HandleGunSwitch();
             HandleShooting();
-            //HandleAimAndMouse();
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 Cursor.lockState = CursorLockMode.Confined;
@@ -196,7 +185,6 @@ namespace escapefromtampere.PlayerControl
             {
                 Destroy(rightGunBone.GetChild(0).gameObject);
                 anim.SetBool("HoldingBigGun", false);
-                holdingGun = false;
                 return;
             }
         }
@@ -258,31 +246,6 @@ namespace escapefromtampere.PlayerControl
             
         }
 
-
-        private void HandleAimAndMouse() 
-        {
-            
-            anim.SetBool(aimHash, inputManager.Aim);
-            if (inputManager.Aim)
-            {
-                camVirtualCam.enabled = false;
-                CamSetting.enabled = false;
-                //CamSetting2.enabled = true;
-
-                aimRig.weight = 0.5f;
-            }
-            
-            if (!inputManager.Aim)
-            {
-                //CamSetting2.enabled = false;
-                CamSetting.enabled = true;
-                camVirtualCam.enabled = true;
-                
-                aimRig.weight = 0f;
-            }
-
-        }
-        
 
     }
 
