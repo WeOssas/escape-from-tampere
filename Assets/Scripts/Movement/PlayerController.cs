@@ -18,6 +18,14 @@ namespace escapefromtampere.PlayerControl
 
         [SerializeField] private Rig aimRig;
 
+        [SerializeField] private MultiAimConstraint bodyAim;
+
+        [SerializeField] private MultiAimConstraint handAim;
+
+        [SerializeField] private RigBuilder aimBuilder;
+
+        [SerializeField] private TwoBoneIKConstraint aimIKConstraint;
+
         [SerializeField] private Transform camHolder;
 
         [SerializeField] private Transform aimingPos;
@@ -25,6 +33,8 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private Transform rightGunBone;
         
         [SerializeField] private Transform cam;
+
+        [SerializeField] private CinemachineVirtualCamera AimCam, MainCam;
 
         [SerializeField] private float upperLimit = -40f;
         [SerializeField] private float bottomLimit = 70f;
@@ -38,15 +48,15 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private LayerMask groundCheck;
         public bool LockCameraPosition = false;
 
-        public GameObject CinemachineCameraTarget;
-
         private Rigidbody playerRb;
 
         private InputManager inputManager;
 
+        private Transform GunParent;
+
         private Transform Gun;
 
-        private Transform gunChild;
+        private Transform GunGrapPoint;
 
         private Animator anim;
 
@@ -71,6 +81,8 @@ namespace escapefromtampere.PlayerControl
         private int crouchHash;
 
         private int aimHash;
+
+        private bool readyToShoot;
 
         private WeaponArsenal weaponArsenal;
 
@@ -113,6 +125,7 @@ namespace escapefromtampere.PlayerControl
             HandleCrouch();
             HandleGunSwitch();
             HandleShooting();
+            HandleAiming();
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 Cursor.lockState = CursorLockMode.Confined;
@@ -160,16 +173,28 @@ namespace escapefromtampere.PlayerControl
         private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
         private void HandleGunSwitch()
         {
+            if(rightGunBone.childCount <= 0)
+            {
+                aimRig.weight = 0f;
+            }
+            else
+            {
+                aimRig.weight = 1f;
+            }
+            
+            
             if (inputManager.Shotgun)
             {
                 weaponArsenal.SetArsenal("Shotgun");
                 anim.SetBool("HoldingBigGun", true);
+                BuildAimingRig();
                 return;
             }
             if (inputManager.Rifle)
             {
                 weaponArsenal.SetArsenal("Rifle");
                 anim.SetBool("HoldingBigGun", true);
+                BuildAimingRig();
                 return;
             }
                 
@@ -177,9 +202,9 @@ namespace escapefromtampere.PlayerControl
             {
                 weaponArsenal.SetArsenal("Pistol");
                 anim.SetBool("HoldingBigGun", true);
+                BuildAimingRig();
                 return;
-            }
-                
+            } 
 
             if (inputManager.Holster)
             {
@@ -232,18 +257,53 @@ namespace escapefromtampere.PlayerControl
 
         void HandleShooting()
         {
-            Gun = rightGunBone.GetChild(0);
-            gunChild = Gun.GetChild(0);
-            currentWeapon = gunChild.GetComponent<GunV2>();
-            if(Gun != null & inputManager.Shoot)
+            if (inputManager.Aim & readyToShoot)
             {
-                currentWeapon.Shoot();
+                GunParent = rightGunBone.GetChild(0);
+                Gun = GunParent.GetChild(0);
+                currentWeapon = Gun.GetComponent<GunV2>();
+                if (GunParent != null & inputManager.Shoot)
+                {
+                    currentWeapon.Shoot();
+                }
+                if (inputManager.Reload && Gun != null)
+                {
+                    currentWeapon.Reload();
+                }
+
             }
-            if (inputManager.Reload && Gun != null)
+
+        }
+        void HandleAiming()
+        {
+            if (inputManager.Aim & rightGunBone.childCount >= 1)
             {
-                currentWeapon.Reload();
+                AimCam.gameObject.SetActive(true);
+                MainCam.gameObject.SetActive(false);
+                bodyAim.weight = 1f;
+                handAim.weight = 1f;
+                readyToShoot = true;
             }
-            
+            else
+            {
+                AimCam.gameObject.SetActive(false);
+                MainCam.gameObject.SetActive(true);
+                bodyAim.weight = 0f;
+                handAim.weight = 0f;
+                readyToShoot = false;
+            }
+
+
+
+        }
+        void BuildAimingRig()
+        {
+            GunParent = rightGunBone.GetChild(0);
+            Gun = GunParent.GetChild(0);
+            GunGrapPoint = Gun.GetChild(2);
+            aimIKConstraint.data.target = GunGrapPoint;
+            aimBuilder.Build();
+
         }
 
 
