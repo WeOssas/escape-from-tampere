@@ -1,22 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using escapefromtampere.Manager;
 
 public class Inventory : MonoBehaviour
 {
     public static Inventory Instance;
     public GameObject inventoryUI;
-    
+
     public List<Item> items = new List<Item>();
 
     private bool inventoryFull = false;
+    private InputManager inputManager;
 
     public delegate void OnItemChanged();
     public OnItemChanged onItemChangedCallback;
 
     public int space = 20;
 
-    
+
+
 
     private void Awake()
     {
@@ -29,12 +32,23 @@ public class Inventory : MonoBehaviour
         // If we pass the test
         Instance = this;
 
-       
+
     }
+
+
+    private void Start()
+    {
+        inputManager = GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>();
+    }
+
+
+
+
+
     private void Update()
     {
         //USING THE OLD INPUT SYSTET JUST FOR TESTING (CHANGING TO THE NEW ONE LATER)
-        if (Input.GetKeyDown(KeyCode.I))
+        if (inputManager.OpenInventory)
         {
             inventoryUI.SetActive(!inventoryUI.activeSelf);
         }
@@ -42,9 +56,9 @@ public class Inventory : MonoBehaviour
 
 
     public bool Add(Item item)
-    { 
+    {
     /* Add method is used to add items to inventory */
-        
+
         //If item is default, let's not add it to inventory
         if(!item.isDefaultItem)
         {
@@ -56,14 +70,14 @@ public class Inventory : MonoBehaviour
             items.Add(item);
             if (onItemChangedCallback != null)
                 onItemChangedCallback.Invoke();
-        }   
+        }
         return true;
-            
+
     }
     public void Remove(Item item)
     {
     /* Remove methhod is used to remove items from inventory */
-        
+
         items.Remove(item);
         if (onItemChangedCallback != null)
             onItemChangedCallback.Invoke();

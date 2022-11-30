@@ -9,9 +9,25 @@ public class Item : ScriptableObject
     new public string name = "New item";
     public Sprite icon = null;
     public bool isDefaultItem = false;
+    public string itemType = null;
+
+    private void Awake()
+    {
+    }
 
     public virtual void Use()
     {
-        Debug.Log("Using "+ name);
+        if(itemType == "Health")
+        {
+            if(name == "Adrenaline")
+            {
+                PlayerInstance.instance.health += 50;
+                Inventory.Instance.Remove(this);
+                
+            }
+                
+        }
+
+        
     }
 }
