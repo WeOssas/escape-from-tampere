@@ -152,6 +152,15 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""OpenInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""31ef968b-fffa-423f-a6d6-0992ad692746"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -352,6 +361,17 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""action"": ""UnlockMouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c7815a91-c56a-40e8-a8e3-eb5dd875a782"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -374,6 +394,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         m_Player1_Shoot = m_Player1.FindAction("Shoot", throwIfNotFound: true);
         m_Player1_Reload = m_Player1.FindAction("Reload", throwIfNotFound: true);
         m_Player1_UnlockMouse = m_Player1.FindAction("UnlockMouse", throwIfNotFound: true);
+        m_Player1_OpenInventory = m_Player1.FindAction("OpenInventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -447,6 +468,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player1_Shoot;
     private readonly InputAction m_Player1_Reload;
     private readonly InputAction m_Player1_UnlockMouse;
+    private readonly InputAction m_Player1_OpenInventory;
     public struct Player1Actions
     {
         private @playerControlTest m_Wrapper;
@@ -465,6 +487,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_Player1_Shoot;
         public InputAction @Reload => m_Wrapper.m_Player1_Reload;
         public InputAction @UnlockMouse => m_Wrapper.m_Player1_UnlockMouse;
+        public InputAction @OpenInventory => m_Wrapper.m_Player1_OpenInventory;
         public InputActionMap Get() { return m_Wrapper.m_Player1; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -516,6 +539,9 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @UnlockMouse.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUnlockMouse;
                 @UnlockMouse.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUnlockMouse;
                 @UnlockMouse.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUnlockMouse;
+                @OpenInventory.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnOpenInventory;
+                @OpenInventory.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnOpenInventory;
+                @OpenInventory.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnOpenInventory;
             }
             m_Wrapper.m_Player1ActionsCallbackInterface = instance;
             if (instance != null)
@@ -562,6 +588,9 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @UnlockMouse.started += instance.OnUnlockMouse;
                 @UnlockMouse.performed += instance.OnUnlockMouse;
                 @UnlockMouse.canceled += instance.OnUnlockMouse;
+                @OpenInventory.started += instance.OnOpenInventory;
+                @OpenInventory.performed += instance.OnOpenInventory;
+                @OpenInventory.canceled += instance.OnOpenInventory;
             }
         }
     }
@@ -582,5 +611,6 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnUnlockMouse(InputAction.CallbackContext context);
+        void OnOpenInventory(InputAction.CallbackContext context);
     }
 }

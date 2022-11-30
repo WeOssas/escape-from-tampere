@@ -35,6 +35,8 @@ namespace escapefromtampere.Manager
 
         public bool UnlockMouse { get; private set; }
 
+        public bool OpenInventory { get; private set; }
+
 
 
         private InputActionMap currentMap;
@@ -67,6 +69,8 @@ namespace escapefromtampere.Manager
 
         private InputAction UnlockAction;
 
+        private InputAction InventoryAction;
+
         private void Awake()
         {
             hideCursor();
@@ -85,6 +89,7 @@ namespace escapefromtampere.Manager
             shootAction = currentMap.FindAction("Shoot");
             reloadAction = currentMap.FindAction("Reload");
             UnlockAction = currentMap.FindAction("UnlockMouse");
+            InventoryAction = currentMap.FindAction("OpenInventory");
 
             moveAction.performed += onMove;
             lookAction.performed += onLook;
@@ -100,6 +105,7 @@ namespace escapefromtampere.Manager
             shootAction.performed += onShoot;
             reloadAction.performed += onReload;
             UnlockAction.performed += onUnlock;
+            InventoryAction.performed += onInventory;
 
 
             moveAction.canceled += onMove;
@@ -116,6 +122,7 @@ namespace escapefromtampere.Manager
             shootAction.canceled += onShoot;
             reloadAction.canceled += onReload;
             UnlockAction.canceled += onUnlock;
+            InventoryAction.canceled += onInventory;
         }
         private void hideCursor()
         {
@@ -189,6 +196,10 @@ namespace escapefromtampere.Manager
         private void onUnlock(InputAction.CallbackContext context)
         {
             UnlockMouse = context.ReadValueAsButton();
+        }
+        private void onInventory(InputAction.CallbackContext context)
+        {
+            OpenInventory = context.ReadValueAsButton();
         }
         private void OnEnable()
         {
