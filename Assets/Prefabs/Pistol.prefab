@@ -453,5 +453,6 @@ MonoBehaviour:
     m_Bits: 2147483647
   shootingAudio: {fileID: 7045011597685675698}
   ReloadAudio: {fileID: 1796496276954552510}
+  dmg: 5
   magazineSize: 12
   reloadTime: 2.5

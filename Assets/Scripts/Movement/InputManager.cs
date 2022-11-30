@@ -33,6 +33,8 @@ namespace escapefromtampere.Manager
 
         public bool Reload { get; private set; }
 
+        public bool UnlockMouse { get; private set; }
+
 
 
         private InputActionMap currentMap;
@@ -63,9 +65,11 @@ namespace escapefromtampere.Manager
 
         private InputAction reloadAction;
 
+        private InputAction UnlockAction;
+
         private void Awake()
         {
-            HideCursor();
+            hideCursor();
             currentMap = playerInput.currentActionMap;
             moveAction = currentMap.FindAction("Move");
             lookAction = currentMap.FindAction("Look");
@@ -80,6 +84,7 @@ namespace escapefromtampere.Manager
             interAction = currentMap.FindAction("Interact");
             shootAction = currentMap.FindAction("Shoot");
             reloadAction = currentMap.FindAction("Reload");
+            UnlockAction = currentMap.FindAction("UnlockMouse");
 
             moveAction.performed += onMove;
             lookAction.performed += onLook;
@@ -94,6 +99,7 @@ namespace escapefromtampere.Manager
             interAction.performed += onInteract;
             shootAction.performed += onShoot;
             reloadAction.performed += onReload;
+            UnlockAction.performed += onUnlock;
 
 
             moveAction.canceled += onMove;
@@ -109,13 +115,12 @@ namespace escapefromtampere.Manager
             interAction.canceled += onInteract;
             shootAction.canceled += onShoot;
             reloadAction.canceled += onReload;
+            UnlockAction.canceled += onUnlock;
         }
-
-
-        private void HideCursor()
+        private void hideCursor()
         {
-            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         private void onMove(InputAction.CallbackContext context)
         {
@@ -179,6 +184,11 @@ namespace escapefromtampere.Manager
         private void onReload(InputAction.CallbackContext context)
         {
             Reload = context.ReadValueAsButton();
+        }
+
+        private void onUnlock(InputAction.CallbackContext context)
+        {
+            UnlockMouse = context.ReadValueAsButton();
         }
         private void OnEnable()
         {

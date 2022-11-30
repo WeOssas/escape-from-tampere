@@ -447,6 +447,7 @@ MonoBehaviour:
     m_Bits: 2147483647
   shootingAudio: {fileID: 7595035698356733248}
   ReloadAudio: {fileID: 6543175988272911522}
+  dmg: 20
   magazineSize: 6
   reloadTime: 4
 --- !u!4 &2261644359660121466 stripped

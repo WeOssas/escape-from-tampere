@@ -84,6 +84,8 @@ namespace escapefromtampere.PlayerControl
 
         private bool readyToShoot;
 
+        private int mouseIndex = 0;
+
         private WeaponArsenal weaponArsenal;
 
         private GunV2 currentWeapon;
@@ -126,16 +128,7 @@ namespace escapefromtampere.PlayerControl
             HandleGunSwitch();
             HandleShooting();
             HandleAiming();
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
-            {
-                Cursor.lockState = CursorLockMode.Confined;
-                Cursor.visible = true;
-            }
-            if (Input.GetKeyDown(KeyCode.RightAlt))
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
+            HandleCursorLock();
         }
 
         private void Move()
@@ -293,8 +286,29 @@ namespace escapefromtampere.PlayerControl
                 readyToShoot = false;
             }
 
+        }
 
+        void HandleCursorLock()
+        {
+            if (inputManager.UnlockMouse)
+            {
+                if(mouseIndex == 0) 
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+                    Cursor.visible = true;
+                    mouseIndex = 1;
+                    return;
+                }
+                if(mouseIndex == 1) 
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                    mouseIndex = 0;
+                    return;
+                }
 
+                 
+            }
         }
         void BuildAimingRig()
         {

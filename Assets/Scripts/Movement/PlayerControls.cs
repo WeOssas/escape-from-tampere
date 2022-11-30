@@ -143,6 +143,15 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UnlockMouse"",
+                    ""type"": ""Button"",
+                    ""id"": ""21d4d338-155c-4682-8d1f-a728599161f9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -332,6 +341,17 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""511e60d6-0676-4205-acef-c3389b7b2538"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UnlockMouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -353,6 +373,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         m_Player1_Interact = m_Player1.FindAction("Interact", throwIfNotFound: true);
         m_Player1_Shoot = m_Player1.FindAction("Shoot", throwIfNotFound: true);
         m_Player1_Reload = m_Player1.FindAction("Reload", throwIfNotFound: true);
+        m_Player1_UnlockMouse = m_Player1.FindAction("UnlockMouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -425,6 +446,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player1_Interact;
     private readonly InputAction m_Player1_Shoot;
     private readonly InputAction m_Player1_Reload;
+    private readonly InputAction m_Player1_UnlockMouse;
     public struct Player1Actions
     {
         private @playerControlTest m_Wrapper;
@@ -442,6 +464,7 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_Player1_Interact;
         public InputAction @Shoot => m_Wrapper.m_Player1_Shoot;
         public InputAction @Reload => m_Wrapper.m_Player1_Reload;
+        public InputAction @UnlockMouse => m_Wrapper.m_Player1_UnlockMouse;
         public InputActionMap Get() { return m_Wrapper.m_Player1; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -490,6 +513,9 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @Reload.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnReload;
                 @Reload.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnReload;
                 @Reload.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnReload;
+                @UnlockMouse.started -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUnlockMouse;
+                @UnlockMouse.performed -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUnlockMouse;
+                @UnlockMouse.canceled -= m_Wrapper.m_Player1ActionsCallbackInterface.OnUnlockMouse;
             }
             m_Wrapper.m_Player1ActionsCallbackInterface = instance;
             if (instance != null)
@@ -533,6 +559,9 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
+                @UnlockMouse.started += instance.OnUnlockMouse;
+                @UnlockMouse.performed += instance.OnUnlockMouse;
+                @UnlockMouse.canceled += instance.OnUnlockMouse;
             }
         }
     }
@@ -552,5 +581,6 @@ public partial class @playerControlTest : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnUnlockMouse(InputAction.CallbackContext context);
     }
 }

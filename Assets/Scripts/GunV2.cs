@@ -26,6 +26,8 @@ public class GunV2 : MonoBehaviour
 
     public AudioSource ReloadAudio;
 
+    public int dmg;
+
     private Animator animator;
     private float lastShot;
     private int bulletsLeft;
@@ -68,6 +70,12 @@ public class GunV2 : MonoBehaviour
             //Range should be changed but we'll use maxValue for now with float.MaxValue.
             if (Physics.Raycast(bulletSpawnAt.position, cam.forward, out RaycastHit hit, float.MaxValue, mask))
             {
+                if(hit.collider.tag == "Enemy")
+                {
+                    SoldierAi soldierHit = hit.collider.GetComponent<SoldierAi>();
+                    soldierHit.health -= dmg;
+                    soldierHit.gotShot = true;
+                }
                 shootingAudio.Play();
                 TrailRenderer trail = Instantiate(bulletTrail, bulletSpawnAt.position, Quaternion.identity);
 
