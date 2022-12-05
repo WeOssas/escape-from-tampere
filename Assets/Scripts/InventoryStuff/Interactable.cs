@@ -19,7 +19,7 @@ public class Interactable : MonoBehaviour
     private void Update()
     {
         float distance = Vector3.Distance(player.position, interactableObject.position);
-        if(distance <= radius & Actions.ingame.Interact.WasPressedThisFrame() & !hasInteracted)
+        if(distance <= radius & Actions.ingame.Interact.WasPerformedThisFrame() & !hasInteracted)
         {
             Interact();
         }

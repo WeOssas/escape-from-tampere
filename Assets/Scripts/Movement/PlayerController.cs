@@ -134,9 +134,9 @@ namespace escapefromtampere.PlayerControl
             Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
             
             float speedMultiplier;
-            if (Actions.ingame.Run.WasPerformedThisFrame()) speedMultiplier = runSpeed;
-            else if (Actions.ingame.Crouch.WasPerformedThisFrame()) speedMultiplier = 1.5f;
-            else if (Actions.ingame.Aim.WasPerformedThisFrame()) speedMultiplier = 2f;
+            if (Actions.ingame.Run.IsPressed()) speedMultiplier = runSpeed;
+            else if (Actions.ingame.Crouch.IsPressed()) speedMultiplier = 1.5f;
+            else if (Actions.ingame.Aim.IsPressed()) speedMultiplier = 2f;
             else speedMultiplier = walkSpeed;
 
             Vector3 movementInput = Actions.ingame.Move.ReadValue<Vector3>() * speedMultiplier;
@@ -148,7 +148,7 @@ namespace escapefromtampere.PlayerControl
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
             }
 
-            if (Actions.ingame.Aim.WasPerformedThisFrame() & grounded)
+            if (Actions.ingame.Aim.IsPressed() & grounded)
             {
                 transform.rotation = cameraDirection;
             }
@@ -158,7 +158,7 @@ namespace escapefromtampere.PlayerControl
             anim.SetFloat(xVelHash, animationVelocity.x);
             anim.SetFloat(yVelHash, animationVelocity.z);
         }
-        private void HandleCrouch() => anim.SetBool(crouchHash, Actions.ingame.Crouch.WasPerformedThisFrame());
+        private void HandleCrouch() => anim.SetBool(crouchHash, Actions.ingame.Crouch.IsPressed());
         private void HandleGunSwitch()
         {
             if(rightGunBone.childCount <= 0)
@@ -171,14 +171,14 @@ namespace escapefromtampere.PlayerControl
             }
             
             
-            if (Actions.ingame.Shotgun.WasPressedThisFrame())
+            if (Actions.ingame.Shotgun.WasPerformedThisFrame())
             {
                 weaponArsenal.SetArsenal("Shotgun");
                 anim.SetBool("HoldingBigGun", true);
                 BuildAimingRig();
                 return;
             }
-            if (Actions.ingame.Rifle.WasPressedThisFrame())
+            if (Actions.ingame.Rifle.WasPerformedThisFrame())
             {
                 weaponArsenal.SetArsenal("Rifle");
                 anim.SetBool("HoldingBigGun", true);
@@ -186,7 +186,7 @@ namespace escapefromtampere.PlayerControl
                 return;
             }
                 
-            if (Actions.ingame.Pistol.WasPressedThisFrame())
+            if (Actions.ingame.Pistol.WasPerformedThisFrame())
             {
                 weaponArsenal.SetArsenal("Pistol");
                 anim.SetBool("HoldingBigGun", true);
@@ -194,7 +194,7 @@ namespace escapefromtampere.PlayerControl
                 return;
             } 
 
-            if (Actions.ingame.Holster.WasPressedThisFrame())
+            if (Actions.ingame.Holster.WasPerformedThisFrame())
             {
                 Destroy(rightGunBone.GetChild(0).gameObject);
                 anim.SetBool("HoldingBigGun", false);
@@ -205,7 +205,7 @@ namespace escapefromtampere.PlayerControl
         {
             //Returnataan jos pelaajalle ei ole laitettu animatoria tai hän ei ole hypännyt
             if (!hasAnimator) return;
-            if (!Actions.ingame.Jump.WasPerformedThisFrame()) return;
+            if (!Actions.ingame.Jump.IsPressed()) return;
             anim.SetTrigger(jumpHash);
         }
 
@@ -245,16 +245,16 @@ namespace escapefromtampere.PlayerControl
 
         void HandleShooting()
         {
-            if (Actions.ingame.Aim.WasPerformedThisFrame() & readyToShoot)
+            if (Actions.ingame.Aim.IsPressed() & readyToShoot)
             {
                 GunParent = rightGunBone.GetChild(0);
                 Gun = GunParent.GetChild(0);
                 currentWeapon = Gun.GetComponent<GunV2>();
-                if (GunParent != null && Actions.ingame.Shoot.WasPressedThisFrame())
+                if (GunParent != null && Actions.ingame.Shoot.WasPerformedThisFrame())
                 {
                     currentWeapon.Shoot();
                 }
-                if (Actions.ingame.Reload.WasPressedThisFrame() && Gun != null)
+                if (Actions.ingame.Reload.WasPerformedThisFrame() && Gun != null)
                 {
                     currentWeapon.Reload();
                 }
@@ -264,7 +264,7 @@ namespace escapefromtampere.PlayerControl
         }
         void HandleAiming()
         {
-            if (Actions.ingame.Aim.WasPerformedThisFrame() && rightGunBone.childCount >= 1)
+            if (Actions.ingame.Aim.IsPressed() && rightGunBone.childCount >= 1)
             {
                 AimCam.gameObject.SetActive(true);
                 MainCam.gameObject.SetActive(false);
