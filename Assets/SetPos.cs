@@ -15,7 +15,7 @@ public class SetPos : MonoBehaviour
 
     private void Update()
     {
-        if (Actions.ingame.Aim.WasPerformedThisFrame())
+        if (Actions.ingame.Aim.IsPressed())
         {
             transform.position = new Vector3(pos2.position.x, pos2.position.y, pos2.position.z);
         }

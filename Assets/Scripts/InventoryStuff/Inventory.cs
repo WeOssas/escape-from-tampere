@@ -35,7 +35,7 @@ public class Inventory : MonoBehaviour
     
     private void Update()
     {
-        if (Actions.ingame.OpenInventory.WasPressedThisFrame())
+        if (Actions.ingame.OpenInventory.WasPerformedThisFrame())
         {
             inventoryUI.SetActive(!inventoryUI.activeSelf);
         }

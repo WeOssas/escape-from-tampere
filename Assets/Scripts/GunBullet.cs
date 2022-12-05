@@ -68,7 +68,7 @@ public class GunBullet : MonoBehaviour
         
 
         //reloading (automatic reloading not included)
-        if (Actions.ingame.Reload.WasPressedThisFrame() && bulletsLeft < magazineSize && !reloading)
+        if (Actions.ingame.Reload.WasPerformedThisFrame() && bulletsLeft < magazineSize && !reloading)
         {
             Reload();
             Debug.Log("Reloading sound");
@@ -76,7 +76,7 @@ public class GunBullet : MonoBehaviour
         }
 
         //Shooting
-        if (readyToShoot && Actions.ingame.Shoot.WasPressedThisFrame() && !reloading && bulletsLeft > 0)
+        if (readyToShoot && Actions.ingame.Shoot.WasPerformedThisFrame() && !reloading && bulletsLeft > 0)
         {
             //Set bullets shot to 0
             bulletsShot = 0;
