@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using escapefromtampere.Manager;
 
 public class Inventory : MonoBehaviour
 {
@@ -11,7 +10,6 @@ public class Inventory : MonoBehaviour
     public List<Item> items = new List<Item>();
 
     private bool inventoryFull = false;
-    private InputManager inputManager;
 
     public delegate void OnItemChanged();
     public OnItemChanged onItemChangedCallback;
@@ -34,21 +32,10 @@ public class Inventory : MonoBehaviour
 
 
     }
-
-
-    private void Start()
-    {
-        inputManager = GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>();
-    }
-
-
-
-
-
+    
     private void Update()
     {
-        //USING THE OLD INPUT SYSTET JUST FOR TESTING (CHANGING TO THE NEW ONE LATER)
-        if (inputManager.OpenInventory)
+        if (Actions.ingame.OpenInventory.WasPressedThisFrame())
         {
             inventoryUI.SetActive(!inventoryUI.activeSelf);
         }

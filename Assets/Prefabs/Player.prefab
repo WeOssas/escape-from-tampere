@@ -269,15 +269,12 @@ GameObject:
   - component: {fileID: 5872296454852288571}
   - component: {fileID: 6144247254691257449}
   - component: {fileID: 924762926115201273}
-  - component: {fileID: 924762926115201270}
   - component: {fileID: 924762926115201268}
-  - component: {fileID: 924762926115201271}
   - component: {fileID: 924762926115201266}
   - component: {fileID: 924762926115201269}
   - component: {fileID: 924762926115201267}
   - component: {fileID: 924762926115201264}
   - component: {fileID: 924762926115201265}
-  - component: {fileID: 6454127380150483604}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -355,37 +352,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &924762926115201270
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924762926115201275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 5b3501e810f954d4b8015766308104b1,
-    type: 3}
-  m_NotificationBehavior: 3
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player1
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &924762926115201268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,12 +367,16 @@ MonoBehaviour:
   movementLerpSpeed: 0.85
   lookLerpSpeed: 0.1
   aimRig: {fileID: 6144247256224283079}
+  bodyAim: {fileID: 0}
+  handAim: {fileID: 0}
+  aimBuilder: {fileID: 0}
+  aimIKConstraint: {fileID: 0}
   camHolder: {fileID: 0}
   aimingPos: {fileID: 0}
   rightGunBone: {fileID: 6144247256211852808}
   cam: {fileID: 0}
-  camVirtualCam: {fileID: 0}
-  CamSetting: {fileID: 0}
+  AimCam: {fileID: 0}
+  MainCam: {fileID: 0}
   upperLimit: -40
   bottomLimit: 70
   mouseSens: 21
@@ -416,20 +386,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 576
   LockCameraPosition: 0
-  CinemachineCameraTarget: {fileID: 0}
---- !u!114 &924762926115201271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924762926115201275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 151331a08bc934148b8166b126ee75fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerInput: {fileID: 924762926115201270}
 --- !u!114 &924762926115201266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -583,19 +539,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 10000
---- !u!114 &6454127380150483604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 924762926115201275}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 742855bae70705747b5463a85c0c43d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aimVirtualCam: {fileID: 0}
 --- !u!1 &1045294037459227180
 GameObject:
   m_ObjectHideFlags: 0

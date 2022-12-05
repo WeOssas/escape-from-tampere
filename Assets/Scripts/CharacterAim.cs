@@ -9,10 +9,10 @@ public class CharacterAim : MonoBehaviour
     public Cinemachine.AxisState xAxis;
     public Cinemachine.AxisState yAxis;
 
-    private void FixedUpdate()
+    private void Update()
     {
-        xAxis.Update(Time.fixedDeltaTime);
-        yAxis.Update(Time.fixedDeltaTime);
+        xAxis.Update(Time.deltaTime);
+        yAxis.Update(Time.deltaTime);
 
         cameraLookAt.eulerAngles = new Vector3(yAxis.Value, xAxis.Value, 0);
     }

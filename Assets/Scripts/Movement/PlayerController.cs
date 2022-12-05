@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using escapefromtampere.Manager;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
 
@@ -50,8 +49,6 @@ namespace escapefromtampere.PlayerControl
 
         private Rigidbody playerRb;
 
-        private InputManager inputManager;
-
         private Transform GunParent;
 
         private Transform Gun;
@@ -84,8 +81,6 @@ namespace escapefromtampere.PlayerControl
 
         private bool readyToShoot;
 
-        private int mouseIndex = 0;
-
         private WeaponArsenal weaponArsenal;
 
         private GunV2 currentWeapon;
@@ -104,7 +99,6 @@ namespace escapefromtampere.PlayerControl
         {
             hasAnimator = TryGetComponent<Animator>(out anim);
             playerRb = GetComponent<Rigidbody>();
-            inputManager = GetComponent<InputManager>();
             weaponArsenal = GetComponent<WeaponArsenal>();
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
@@ -114,37 +108,38 @@ namespace escapefromtampere.PlayerControl
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
            
-
-
+            
+            InitializeCursorLock();
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            
-            SampleGround();
-            Move();
             HandleJump();
             HandleCrouch();
             HandleGunSwitch();
             HandleShooting();
             HandleAiming();
-            HandleCursorLock();
+        }
+        
+        private void FixedUpdate()
+        {
+            SampleGround();
+            Move(); // Moving needs the be in FixedUpdate so movement speed isn't dependent on framerate
         }
 
         private void Move()
         {
             if (!hasAnimator) return;
 
-
-            float speedMultiplier;
-            if (inputManager.Run) speedMultiplier = runSpeed;
-            else if (inputManager.Crouch) speedMultiplier = 1.5f;
-            else if (inputManager.Aim) speedMultiplier = 2f;
-            else speedMultiplier = walkSpeed;
-
             Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
             
-            Vector3 movementInput = new Vector3(inputManager.Move.x, 0f, inputManager.Move.y) * speedMultiplier;
+            float speedMultiplier;
+            if (Actions.ingame.Run.WasPerformedThisFrame()) speedMultiplier = runSpeed;
+            else if (Actions.ingame.Crouch.WasPerformedThisFrame()) speedMultiplier = 1.5f;
+            else if (Actions.ingame.Aim.WasPerformedThisFrame()) speedMultiplier = 2f;
+            else speedMultiplier = walkSpeed;
+
+            Vector3 movementInput = Actions.ingame.Move.ReadValue<Vector3>() * speedMultiplier;
             if (movementInput != Vector3.zero & grounded)
             {
                 Vector3 rotatedMovement = cameraDirection * movementInput;
@@ -153,7 +148,7 @@ namespace escapefromtampere.PlayerControl
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
             }
 
-            if (inputManager.Aim & grounded)
+            if (Actions.ingame.Aim.WasPerformedThisFrame() & grounded)
             {
                 transform.rotation = cameraDirection;
             }
@@ -163,7 +158,7 @@ namespace escapefromtampere.PlayerControl
             anim.SetFloat(xVelHash, animationVelocity.x);
             anim.SetFloat(yVelHash, animationVelocity.z);
         }
-        private void HandleCrouch() => anim.SetBool(crouchHash, inputManager.Crouch);
+        private void HandleCrouch() => anim.SetBool(crouchHash, Actions.ingame.Crouch.WasPerformedThisFrame());
         private void HandleGunSwitch()
         {
             if(rightGunBone.childCount <= 0)
@@ -176,14 +171,14 @@ namespace escapefromtampere.PlayerControl
             }
             
             
-            if (inputManager.Shotgun)
+            if (Actions.ingame.Shotgun.WasPressedThisFrame())
             {
                 weaponArsenal.SetArsenal("Shotgun");
                 anim.SetBool("HoldingBigGun", true);
                 BuildAimingRig();
                 return;
             }
-            if (inputManager.Rifle)
+            if (Actions.ingame.Rifle.WasPressedThisFrame())
             {
                 weaponArsenal.SetArsenal("Rifle");
                 anim.SetBool("HoldingBigGun", true);
@@ -191,7 +186,7 @@ namespace escapefromtampere.PlayerControl
                 return;
             }
                 
-            if (inputManager.Pistol)
+            if (Actions.ingame.Pistol.WasPressedThisFrame())
             {
                 weaponArsenal.SetArsenal("Pistol");
                 anim.SetBool("HoldingBigGun", true);
@@ -199,7 +194,7 @@ namespace escapefromtampere.PlayerControl
                 return;
             } 
 
-            if (inputManager.Holster)
+            if (Actions.ingame.Holster.WasPressedThisFrame())
             {
                 Destroy(rightGunBone.GetChild(0).gameObject);
                 anim.SetBool("HoldingBigGun", false);
@@ -208,9 +203,9 @@ namespace escapefromtampere.PlayerControl
         }
         private void HandleJump()
         {
-            //Returnataan jos pelaajalle ei ole laitettu animatoria tai h�n ei ole hypnnyt
+            //Returnataan jos pelaajalle ei ole laitettu animatoria tai hän ei ole hypännyt
             if (!hasAnimator) return;
-            if (!inputManager.Jump) return;
+            if (!Actions.ingame.Jump.WasPerformedThisFrame()) return;
             anim.SetTrigger(jumpHash);
         }
 
@@ -250,16 +245,16 @@ namespace escapefromtampere.PlayerControl
 
         void HandleShooting()
         {
-            if (inputManager.Aim & readyToShoot)
+            if (Actions.ingame.Aim.WasPerformedThisFrame() & readyToShoot)
             {
                 GunParent = rightGunBone.GetChild(0);
                 Gun = GunParent.GetChild(0);
                 currentWeapon = Gun.GetComponent<GunV2>();
-                if (GunParent != null & inputManager.Shoot)
+                if (GunParent != null && Actions.ingame.Shoot.WasPressedThisFrame())
                 {
                     currentWeapon.Shoot();
                 }
-                if (inputManager.Reload && Gun != null)
+                if (Actions.ingame.Reload.WasPressedThisFrame() && Gun != null)
                 {
                     currentWeapon.Reload();
                 }
@@ -269,7 +264,7 @@ namespace escapefromtampere.PlayerControl
         }
         void HandleAiming()
         {
-            if (inputManager.Aim & rightGunBone.childCount >= 1)
+            if (Actions.ingame.Aim.WasPerformedThisFrame() && rightGunBone.childCount >= 1)
             {
                 AimCam.gameObject.SetActive(true);
                 MainCam.gameObject.SetActive(false);
@@ -288,27 +283,19 @@ namespace escapefromtampere.PlayerControl
 
         }
 
-        void HandleCursorLock()
+        void InitializeCursorLock()
         {
-            if (inputManager.UnlockMouse)
+            Actions.ingame.UnlockMouse.started += _ =>
             {
-                if(mouseIndex == 0) 
-                {
-                    Cursor.lockState = CursorLockMode.Confined;
-                    Cursor.visible = true;
-                    mouseIndex = 1;
-                    return;
-                }
-                if(mouseIndex == 1) 
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                    mouseIndex = 0;
-                    return;
-                }
+                // Called when the player unlocks the mouse
 
-                 
-            }
+                Cursor.visible = !Cursor.visible;
+                Cursor.lockState = Cursor.visible ? CursorLockMode.Confined : CursorLockMode.Locked;
+            };
+            
+            // When the game starts, lock the mouse.
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
         void BuildAimingRig()
         {

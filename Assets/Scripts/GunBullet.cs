@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Serialization;
-using escapefromtampere.Manager;
 
 public class GunBullet : MonoBehaviour
 {
@@ -30,7 +29,6 @@ public class GunBullet : MonoBehaviour
     bool readyToShoot, reloading;
 
     //References
-    private InputManager inputManager;
     private GameObject player;
     public Camera cam;
 
@@ -44,8 +42,6 @@ public class GunBullet : MonoBehaviour
     private void Start()
     {
         ShootingSound = GetComponent<AudioSource>();
-        inputManager = GameObject.Find("Player").GetComponent<InputManager>();
-        
     }
     private void Awake()
     {
@@ -72,7 +68,7 @@ public class GunBullet : MonoBehaviour
         
 
         //reloading (automatic reloading not included)
-        if (inputManager.Reload && bulletsLeft < magazineSize && !reloading)
+        if (Actions.ingame.Reload.WasPressedThisFrame() && bulletsLeft < magazineSize && !reloading)
         {
             Reload();
             Debug.Log("Reloading sound");
@@ -80,7 +76,7 @@ public class GunBullet : MonoBehaviour
         }
 
         //Shooting
-        if (readyToShoot && inputManager.Shoot && !reloading && bulletsLeft > 0)
+        if (readyToShoot && Actions.ingame.Shoot.WasPressedThisFrame() && !reloading && bulletsLeft > 0)
         {
             //Set bullets shot to 0
             bulletsShot = 0;
