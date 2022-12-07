@@ -20,7 +20,7 @@ public class PlayerInstance : MonoBehaviour
     {
         if(health == 0)
         {
-            //TODO
+            Destroy(gameObject);
         }
     }
     public void OnDestroy()
