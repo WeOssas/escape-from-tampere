@@ -47,6 +47,7 @@ public class EnemyAi : MonoBehaviour
         if (!agent.hasPath)
         {
             SetPathfindingDestination();
+            anim.SetBool("Patrolling", true);
         }
         
         // Attack a nearby player.
@@ -97,7 +98,8 @@ public class EnemyAi : MonoBehaviour
             player.TakeDamage(attackDamage);
             
             // Play attack animation
-            anim.Play("Attack");
+            anim.Play("attack");
+
 
             // Set attack cooldown
             attackOnCooldown = true;
