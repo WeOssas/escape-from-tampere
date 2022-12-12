@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using escapefromtampere.Manager;
 
 public class Interactable : MonoBehaviour
 {
-    public InputManager inputManager;
     public float radius = 3f;
     public float interactionCooldown = 1.5f;
 
@@ -21,7 +19,7 @@ public class Interactable : MonoBehaviour
     private void Update()
     {
         float distance = Vector3.Distance(player.position, interactableObject.position);
-        if(distance <= radius & inputManager.Interact & !hasInteracted)
+        if(distance <= radius & Actions.ingame.Interact.WasPerformedThisFrame() & !hasInteracted)
         {
             Interact();
         }

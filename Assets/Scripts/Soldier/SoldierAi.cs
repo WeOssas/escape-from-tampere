@@ -7,7 +7,8 @@ public class SoldierAi : MonoBehaviour
 {
     // Static is made just in case.
     public static SoldierAi instance;
-    
+
+    public int health;
 
     public Animator anim;
     public NavMeshAgent agent;
@@ -78,6 +79,12 @@ public class SoldierAi : MonoBehaviour
 
     private void Update()
     {
+        if(health <= 0)
+        {
+            Destroy(gameObject);
+        }
+        
+        
         if (gotShot)
         {
             if(GetChasingSuggestion() == Vector3.zero)
@@ -96,11 +103,7 @@ public class SoldierAi : MonoBehaviour
                 {
                     ShootEverySecond();
                 }
-                
-                
-
-                
-                
+               
             }
         }
         else if (!gotShot && !agent.hasPath)
@@ -112,13 +115,7 @@ public class SoldierAi : MonoBehaviour
         
         
     }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "PlayerBullet")
-        {
-            gotShot = true;
-        }
-    }
+
 
 
 

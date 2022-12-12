@@ -14,9 +14,9 @@ public class GunBullet : MonoBehaviour
     public float shootingForce;
 
     // Sounds
-    public AudioSource ShootingSound;
-    public AudioSource ReloadingSound;
-    public AudioSource ReloadingCaseDropSound;
+    private AudioSource ShootingSound;
+    private AudioSource ReloadingSound;
+    private AudioSource ReloadingCaseDropSound;
 
     //stats for the gun
     public float timeBetweenShooting, reloadTime, timeBetweenShots;
@@ -26,9 +26,10 @@ public class GunBullet : MonoBehaviour
     int bulletsLeft, bulletsShot;
 
     //Bools
-    bool shooting, readyToShoot, reloading;
+    bool readyToShoot, reloading;
 
     //References
+    private GameObject player;
     public Camera cam;
 
     //Graphics
@@ -41,8 +42,6 @@ public class GunBullet : MonoBehaviour
     private void Start()
     {
         ShootingSound = GetComponent<AudioSource>();
-        ReloadingSound = GetComponent<AudioSource>();
-        ReloadingCaseDropSound = GetComponent<AudioSource>();
     }
     private void Awake()
     {
@@ -66,19 +65,18 @@ public class GunBullet : MonoBehaviour
     private void MyInput()
     {
         // Get input for shooting (whether the button is down, if allowButtonHold, otherwise whether the button is released)
-        shooting = allowButtonHold ? Input.GetKey(KeyCode.Mouse0) : Input.GetKeyDown(KeyCode.Mouse0);
+        
 
         //reloading (automatic reloading not included)
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && !reloading)
+        if (Actions.ingame.Reload.WasPerformedThisFrame() && bulletsLeft < magazineSize && !reloading)
         {
             Reload();
             Debug.Log("Reloading sound");
-            ReloadingSound.Play();
-            ReloadingCaseDropSound.Play();
+            
         }
 
         //Shooting
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (readyToShoot && Actions.ingame.Shoot.WasPerformedThisFrame() && !reloading && bulletsLeft > 0)
         {
             //Set bullets shot to 0
             bulletsShot = 0;

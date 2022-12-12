@@ -12,8 +12,7 @@ public class WeaponArsenal : MonoBehaviour
 
     private void Awake()
     {
-        if (arsenal.Count > 0)
-            SetArsenal(arsenal[0].name);
+        
     }
 
     public void SetArsenal(string name)

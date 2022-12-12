@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class WeaponDamage : MonoBehaviour
 {
     public static WeaponDamage instance;
@@ -10,6 +11,8 @@ public class WeaponDamage : MonoBehaviour
     public float range = 100f;
 
     public Camera cam;
+
+    
 
     private void Awake()
     {
