@@ -25,9 +25,17 @@ public class EnemyHealth : MonoBehaviour
         }
 
         if (health <= 0)
-            SceneManager.LoadScene(endScene);
+        {
             healthUI.SetActive(false);
             Destroy(gameObject);
+        }
+           
+        if (SceneManager.GetActiveScene().name == "BossBattle")
+        {
+            SceneManager.LoadScene(endScene);
+        }
+
+        
 
 
         if (health > maxHealth)
