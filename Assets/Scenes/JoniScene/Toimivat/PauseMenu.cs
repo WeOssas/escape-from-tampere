@@ -6,7 +6,8 @@ public class PauseMenu : MonoBehaviour
 {
 
     // t‰t‰ voi k‰ytt‰‰ esim ‰‰niss‰ kun painaa esci‰ niin musiikki vaikka lakkaa
-    // if (PauseMenu.GameIsPaused{}
+
+    //if (PauseMenu.GameIsPaused{audioSource.stop}
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
 
