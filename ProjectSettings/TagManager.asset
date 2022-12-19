@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Bullet
   - PlayerBullet
+  - GameMusic
+  - Shootable
   layers:
   - Default
   - TransparentFX
@@ -14,13 +16,11 @@ TagManager:
   - 
   - Water
   - UI
+  - 
+  - 
+  - Lighting
   - Ground
-  - 
-  - isGround
-  - 
-  - Player
-  - Enemy
-  - 
+  - Postprocessing
   - 
   - 
   - 
@@ -42,6 +42,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Fire
+    uniqueID: 3804908061
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

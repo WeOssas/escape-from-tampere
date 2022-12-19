@@ -16,4 +16,6 @@ public class DestroyBullet : MonoBehaviour
     }
 
    
+
+   
 }
