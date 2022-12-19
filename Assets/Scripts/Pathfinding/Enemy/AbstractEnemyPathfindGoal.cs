@@ -89,5 +89,10 @@ namespace Pathfinding.Enemy
         {
             
         }
+        
+        /// <returns>
+        /// Number of FixedUpdate cycles since this goal was calculated until the next FixedUpdate call should (re-)calculate a pathfinding destination.
+        /// </returns>
+        public abstract int GetUpdateFrequency();
     }
 }

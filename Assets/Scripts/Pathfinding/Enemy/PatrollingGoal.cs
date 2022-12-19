@@ -45,5 +45,10 @@ namespace Pathfinding.Enemy
             base.OnUnused(animator);
             animator.SetBool("Patrolling", false);
         }
+
+        public override int GetUpdateFrequency()
+        {
+            return 1000; // 20 seconds (under normal conditions)
+        }
     }
 }

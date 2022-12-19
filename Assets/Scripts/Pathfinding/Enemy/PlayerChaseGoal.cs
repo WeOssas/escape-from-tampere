@@ -34,6 +34,22 @@ namespace Pathfinding.Enemy
         {
             return 100;
         }
-       
+        
+        public override void OnUsed(Animator animator)
+        {
+            base.OnUsed(animator);
+            animator.SetBool("Patrolling", true); // TODO: "Patrolling" is not a good name for a state used also when not patrolling (chasing the player)
+        }
+        
+        public override void OnUnused(Animator animator)
+        {
+            base.OnUnused(animator);
+            animator.SetBool("Patrolling", false); // TODO: "Patrolling" is not a good name for a state used also when not patrolling (chasing the player)
+        }
+
+        public override int GetUpdateFrequency()
+        {
+            return 50; // 1 second (under normal conditions)
+        }
     }
 }
