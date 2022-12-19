@@ -22,6 +22,7 @@ public class EnemyAi : MonoBehaviour
     /// </summary>
     private bool attackOnCooldown;
     public Animator anim;
+    public AudioSource hitSound;
     /// <summary>
     /// Distance the player has to be within to be attacked by this enemy
     /// </summary>
@@ -30,7 +31,7 @@ public class EnemyAi : MonoBehaviour
     /// <summary>
     /// Amount of damage this enemy deals to the player.
     /// </summary>
-    [FormerlySerializedAs("damage")] public float attackDamage;
+    [FormerlySerializedAs("damage")] public int attackDamage;
 
     private AbstractEnemyPathfindGoal[] pathfindingGoals;
     [CanBeNull] private AbstractEnemyPathfindGoal activeGoal;
@@ -99,11 +100,12 @@ public class EnemyAi : MonoBehaviour
         if (!attackOnCooldown)
         {
             // Attack the player
-            VulnerableObject player = PlayerInstance.instance.GetComponent<VulnerableObject>();
-            player.TakeDamage(attackDamage);
+
+            PlayerInstance.instance.health -= attackDamage;
             
             // Play attack animation
             anim.Play("attack");
+            hitSound.Play();
 
             // Set attack cooldown
             attackOnCooldown = true;

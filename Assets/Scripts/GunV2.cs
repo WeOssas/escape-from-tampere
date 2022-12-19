@@ -70,12 +70,21 @@ public class GunV2 : MonoBehaviour
             //Range should be changed but we'll use maxValue for now with float.MaxValue.
             if (Physics.Raycast(bulletSpawnAt.position, cam.forward, out RaycastHit hit, float.MaxValue, mask))
             {
-                if(hit.collider.tag == "Enemy")
+                switch (hit.collider.tag)
                 {
-                    SoldierAi soldierHit = hit.collider.GetComponent<SoldierAi>();
-                    soldierHit.health -= dmg;
-                    soldierHit.gotShot = true;
+                    case "Soldier":
+                        SoldierAi soldierHit = hit.collider.GetComponent<SoldierAi>();
+                        soldierHit.health -= dmg;
+                        soldierHit.gotShot = true;
+                        break;
+                    case "Zombie":
+                        EnemyHealth enemyHit = hit.collider.GetComponent<EnemyHealth>();
+                        enemyHit.health -= dmg;
+                        break;
+                    default:
+                        break;
                 }
+
                 shootingAudio.Play();
                 TrailRenderer trail = Instantiate(bulletTrail, bulletSpawnAt.position, Quaternion.identity);
 

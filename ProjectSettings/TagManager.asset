@@ -9,6 +9,7 @@ TagManager:
   - PlayerBullet
   - GameMusic
   - Shootable
+  - Zombie
   layers:
   - Default
   - TransparentFX
@@ -21,6 +22,7 @@ TagManager:
   - Lighting
   - Ground
   - Postprocessing
+  - 
   - 
   - 
   - 
