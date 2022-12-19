@@ -108,7 +108,6 @@ namespace escapefromtampere.PlayerControl
             fallingHash = Animator.StringToHash("Falling");
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
-           
             
             InitializeCursorLock();
         }
@@ -306,14 +305,19 @@ namespace escapefromtampere.PlayerControl
             {
                 // Called when the player unlocks the mouse
 
-                Cursor.visible = !Cursor.visible;
-                Cursor.lockState = Cursor.visible ? CursorLockMode.Confined : CursorLockMode.Locked;
+                SetCursorLock(Cursor.visible);
             };
             
             // When the game starts, lock the mouse.
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            SetCursorLock(true);
         }
+
+        public static void SetCursorLock(bool locked)
+        {
+            Cursor.visible = !locked;
+            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.Confined;
+        }
+        
         void BuildAimingRig()
         {
             GunParent = rightGunBone.GetChild(0);

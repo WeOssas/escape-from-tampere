@@ -1,43 +1,36 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using escapefromtampere.PlayerControl;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
 
-    // t‰t‰ voi k‰ytt‰‰ esim ‰‰niss‰ kun painaa esci‰ niin musiikki vaikka lakkaa
+    // t√§t√§ voi k√§ytt√§√§ esim √§√§niss√§ kun painaa esci√§ niin musiikki vaikka lakkaa
 
     //if (PauseMenu.GameIsPaused{audioSource.stop}
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
 
-
-    private void Update(){
-        if (Input.GetKeyDown(KeyCode.Escape))
+    private void Update()
+    {
+        if (Actions.ui.PauseMenuToggle.WasPerformedThisFrame())
         {
-            if (GameIsPaused)
-            {
-                Resume();
-            }
-            else
-            {
-                Pause();
-            }
+            SetPaused(!GameIsPaused);
         }
     }
-    public void Resume()
+
+    public void SetPaused(bool paused)
     {
-        pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
-        GameIsPaused = false;
-    }
-    void Pause()
-    {
-        pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
-        GameIsPaused = true;
+        GameIsPaused = paused;
+        pauseMenuUI.SetActive(paused);
+        Time.timeScale = paused ? 0f : 1f;
+        PlayerController.SetCursorLock(!paused);
     }
 
+    // Called by the menu button
     public void LoadMenu()
     {
         
@@ -45,12 +38,9 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         // avaa menu scenen
         SceneManager.LoadScene("Menu");
-
-        // testi
-        Resume();
-        
     }
 
+    // Called by the quit button
     public void QuitGame()
     {
         Debug.Log("Quitting game...");
