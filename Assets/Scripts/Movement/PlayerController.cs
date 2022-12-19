@@ -85,6 +85,7 @@ namespace escapefromtampere.PlayerControl
 
         private GunV2 currentWeapon;
 
+
         
         private const float walkSpeed = 4f;
         private const float runSpeed = 12f;
@@ -219,12 +220,28 @@ namespace escapefromtampere.PlayerControl
         private void SampleGround()
         {
             if (!hasAnimator) return;
+            Vector3 targetPosition;
+            targetPosition = transform.position;
 
             RaycastHit hitInfo;
-            if(Physics.Raycast(playerRb.worldCenterOfMass, Vector3.down, out hitInfo, disToGround + 0.1f, groundCheck))
+            if (Physics.Raycast(playerRb.worldCenterOfMass, Vector3.down, out hitInfo, disToGround + 0.1f, groundCheck))
             {
+                Vector3 raycastHitPoint = hitInfo.point;
+                targetPosition.y = raycastHitPoint.y;
                 grounded = true;
+                if (grounded && !Actions.ingame.Jump.WasPerformedThisFrame())
+                {
+                    transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.01f);
+                }
+                else
+                {
+                    transform.position = targetPosition;
+                }
                 SetAnimationGrounding();
+              
+
+
+                
                 return;
             }
             
