@@ -13435,11 +13435,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 5764818723134814430, guid: b6e54319dcb7d224d80dea809b2c6beb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6578370068538253924, guid: b6e54319dcb7d224d80dea809b2c6beb,
         type: 3}
       propertyPath: m_RootOrder
@@ -13494,11 +13489,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7495209973588047993, guid: b6e54319dcb7d224d80dea809b2c6beb,
-        type: 3}
-      propertyPath: m_BaseOffset
-      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b6e54319dcb7d224d80dea809b2c6beb, type: 3}

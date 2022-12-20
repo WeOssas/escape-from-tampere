@@ -11,6 +11,7 @@ public class PlayerInstance : MonoBehaviour
 {
     public static PlayerInstance instance;
     public int health;
+    public int zombiesKilled;
     
     public void Awake()
     {
