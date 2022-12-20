@@ -24,8 +24,10 @@ public class EnemyHealth : MonoBehaviour
         if (health <= 0)
         {
             healthUI.SetActive(false);
-            Destroy(gameObject);
+            PlayerInstance.instance.zombiesKilled += 1;
             defeated = true;
+            Destroy(gameObject);
+            
         }
            
         if (SceneManager.GetActiveScene().name == "BossBattle" & defeated & endScene != null)

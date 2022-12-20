@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class teleport : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if (collision.gameObject.tag == "Player" && PlayerInstance.instance.zombiesKilled >= 20)
+        {
+            SceneManager.LoadScene("BossBattle");
+        }
     }
+    
+        
+        
+    
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
