@@ -13,17 +13,13 @@ public class EnemyHealth : MonoBehaviour
     {
         health = maxHealth;
         slider.value = CalculateHealth();
+        healthUI.SetActive(true);
     }
 
     void Update()
     {
         slider.value = CalculateHealth();
 
-
-        if (health < maxHealth)
-        {
-            healthUI.SetActive(true);
-        }
 
         if (health <= 0)
         {
@@ -32,7 +28,7 @@ public class EnemyHealth : MonoBehaviour
             defeated = true;
         }
            
-        if (SceneManager.GetActiveScene().name == "BossBattle" & defeated)
+        if (SceneManager.GetActiveScene().name == "BossBattle" & defeated & endScene != null)
         {
             SceneManager.LoadScene(endScene);
         }
