@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.21108195, g: 0.05813718, b: 0.03601958, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1175,8 +1175,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3
-  m_Acceleration: 8
+  m_Speed: 0.1
+  m_Acceleration: 2
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
@@ -1302,11 +1302,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4adea91aaf7ab43865ea77eed9b9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  maxHealth: 100
+  health: 500
+  maxHealth: 500
   slider: {fileID: 612886643}
   healthUI: {fileID: 2039735506873346718}
-  endScene: 
+  endScene: endScene
 --- !u!4 &1926726966 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1926726966, guid: e22c104ef98f1c44e90ed713276d281a,
@@ -1326,6 +1326,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 921789669, guid: 8f792577cec956844a5b54bef9c0fdfe, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1369732821, guid: 8f792577cec956844a5b54bef9c0fdfe, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1333,6 +1337,14 @@ PrefabInstance:
     - target: {fileID: 1369732821, guid: 8f792577cec956844a5b54bef9c0fdfe, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1517044490, guid: 8f792577cec956844a5b54bef9c0fdfe, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1693396410, guid: 8f792577cec956844a5b54bef9c0fdfe, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1090682465864454613, guid: 8f792577cec956844a5b54bef9c0fdfe,
         type: 3}

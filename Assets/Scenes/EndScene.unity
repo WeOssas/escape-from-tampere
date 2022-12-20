@@ -269,7 +269,8 @@ MonoBehaviour:
   m_text: Congrats, you escaped.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6dd62d0c819100a4f8e8be413aa94f4a, type: 2}
-  m_sharedMaterial: {fileID: 520079374181758661, guid: 6dd62d0c819100a4f8e8be413aa94f4a, type: 2}
+  m_sharedMaterial: {fileID: 520079374181758661, guid: 6dd62d0c819100a4f8e8be413aa94f4a,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -613,7 +614,8 @@ MonoBehaviour:
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6dd62d0c819100a4f8e8be413aa94f4a, type: 2}
-  m_sharedMaterial: {fileID: 520079374181758661, guid: 6dd62d0c819100a4f8e8be413aa94f4a, type: 2}
+  m_sharedMaterial: {fileID: 520079374181758661, guid: 6dd62d0c819100a4f8e8be413aa94f4a,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -697,6 +699,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1256643500}
   - component: {fileID: 1256643499}
+  - component: {fileID: 1256643501}
   m_Layer: 0
   m_Name: EndMusiikki
   m_TagString: Untagged
@@ -713,7 +716,8 @@ AudioSource:
   m_GameObject: {fileID: 1256643498}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: -5844966873471319000, guid: 45d8d3de54c7051409704b1589df86ac, type: 2}
+  OutputAudioMixerGroup: {fileID: -5844966873471319000, guid: 45d8d3de54c7051409704b1589df86ac,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 7f671ad2b395219408922b410600ee3e, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.302
@@ -815,6 +819,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1256643501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256643498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a8356cb4ef343a45bb3c6d11cad34d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1470119305
 GameObject:
   m_ObjectHideFlags: 0
@@ -1024,7 +1040,8 @@ MonoBehaviour:
   m_text: Main menu
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6dd62d0c819100a4f8e8be413aa94f4a, type: 2}
-  m_sharedMaterial: {fileID: 520079374181758661, guid: 6dd62d0c819100a4f8e8be413aa94f4a, type: 2}
+  m_sharedMaterial: {fileID: 520079374181758661, guid: 6dd62d0c819100a4f8e8be413aa94f4a,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
