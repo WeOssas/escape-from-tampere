@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 /// <summary>
 /// Used to create a static reference to the player.
 /// Should be added to the player GameObject.
@@ -10,8 +10,11 @@ using UnityEngine.SceneManagement;
 public class PlayerInstance : MonoBehaviour
 {
     public static PlayerInstance instance;
-    public int health;
+    public int health = 100;
+    public int maxHealth = 100;
     public int zombiesKilled;
+    public TextMeshProUGUI zombiesKilledTxt;
+    public TextMeshProUGUI healthTxt;
     
     public void Awake()
     {
@@ -21,13 +24,13 @@ public class PlayerInstance : MonoBehaviour
     {
         if(health == 0)
         {
-            Destroy(gameObject);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
         }
+        if(SceneManager.GetActiveScene().name == "Tampere" & zombiesKilledTxt != null)
+            zombiesKilledTxt.text = "zombies killed: "+zombiesKilled+"/20";
+        
+        healthTxt.text = "HP: " + health + "/" + maxHealth;
+
     }
-    public void OnDestroy()
-    {
-        // When the player dies, reload the current scene.
-        // TODO: maybe add a death screen/animation and/or checkpoints
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
-    }
+    
 }
