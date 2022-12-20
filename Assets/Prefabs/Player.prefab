@@ -1,50 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1054427255
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1054427256}
-  - component: {fileID: 1054427257}
-  m_Layer: 0
-  m_Name: FootCollider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1054427256
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054427255}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 549081090803661377}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1054427257
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1054427255}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.7763672, y: 0.20207977, z: 0.41687012}
-  m_Center: {x: 0.0010070801, y: 0.09505844, z: -0.105773926}
 --- !u!1 &1249532332
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,6 +275,7 @@ GameObject:
   - component: {fileID: 924762926115201264}
   - component: {fileID: 924762926115201265}
   - component: {fileID: 1812290246}
+  - component: {fileID: 4113168397957237175}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -345,7 +301,6 @@ Transform:
   - {fileID: 6144247256224283078}
   - {fileID: 1926726966}
   - {fileID: 1249532333}
-  - {fileID: 1054427256}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -398,6 +353,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementLerpSpeed: 0.85
+  movementSpeed: 0.85
+  fallingThreshold: -0.4
   lookLerpSpeed: 0.1
   aimRig: {fileID: 6144247256224283079}
   bodyAim: {fileID: 6144247255871704147}
@@ -414,13 +371,7 @@ MonoBehaviour:
   bottomLimit: 70
   mouseSens: 21
   jumpFactor: 250
-  disToGround: 1.9
-  groundCheck:
-    serializedVersion: 2
-    m_Bits: 576
   LockCameraPosition: 0
-  footCollider: {fileID: 1054427257}
-  playerCollider: {fileID: 924762926115201267}
 --- !u!114 &924762926115201266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -574,7 +525,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
+  maxHealth: 100
   zombiesKilled: 0
+  zombiesKilledTxt: {fileID: 0}
+  healthTxt: {fileID: 0}
 --- !u!114 &1812290246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,6 +578,24 @@ MonoBehaviour:
       m_RecenteringTime: 0
       m_LegacyHeadingDefinition: 0
       m_LegacyVelocityFilterStrength: 0
+--- !u!143 &4113168397957237175
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924762926115201275}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 4
+  m_Radius: 0.75
+  m_SlopeLimit: 45
+  m_StepOffset: 0.5
+  m_SkinWidth: 0.4
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &1045294037459227180
 GameObject:
   m_ObjectHideFlags: 0

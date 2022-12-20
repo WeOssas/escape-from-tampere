@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
-
+using UnityEngine.Serialization;
 
 
 namespace escapefromtampere.PlayerControl
@@ -12,6 +12,10 @@ namespace escapefromtampere.PlayerControl
     {
 
         [SerializeField] private float movementLerpSpeed = 0.85F;
+        
+        [FormerlySerializedAs("movementLerpSpeed")] [SerializeField] private float movementSpeed = 0.2F;
+        
+        [SerializeField] private double fallingThreshold = -0.4;
 
         [SerializeField] private float lookLerpSpeed = 0.1F;
 
@@ -41,17 +45,10 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private float mouseSens = 21f;
 
         [SerializeField] private float jumpFactor = 250f;
-
-        [SerializeField] private float disToGround = 10f;
-
-        [SerializeField] private LayerMask groundCheck;
+        
         public bool LockCameraPosition = false;
 
-        public Collider footCollider;
-
-        public Collider playerCollider;
-
-        private Rigidbody playerRb;
+        private CharacterController controller;
 
         private Transform GunParent;
 
@@ -62,8 +59,6 @@ namespace escapefromtampere.PlayerControl
         private Animator anim;
 
         private bool hasAnimator;
-
-        private bool grounded;
 
         private int xVelHash;
 
@@ -103,7 +98,7 @@ namespace escapefromtampere.PlayerControl
         private void Start()
         {
             hasAnimator = TryGetComponent<Animator>(out anim);
-            playerRb = GetComponent<Rigidbody>();
+            controller = GetComponent<CharacterController>();
             weaponArsenal = GetComponent<WeaponArsenal>();
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
@@ -118,16 +113,12 @@ namespace escapefromtampere.PlayerControl
 
         private void Update()
         {
+            Move();
             HandleCrouch();
             HandleGunSwitch();
             HandleShooting();
             HandleAiming();
-        }
-        
-        private void FixedUpdate()
-        {
-            SampleGround();
-            Move(); // Moving needs the be in FixedUpdate so movement speed isn't dependent on framerate
+            SetAnimationGrounding();
         }
 
         private void Move()
@@ -143,33 +134,35 @@ namespace escapefromtampere.PlayerControl
             else speedMultiplier = walkSpeed;
 
             Vector3 movementInput = Actions.ingame.Move.ReadValue<Vector3>() * speedMultiplier;
-            if (movementInput != Vector3.zero & grounded)
+
+            if (movementInput != Vector3.zero)
             {
                 Vector3 rotatedMovement = cameraDirection * movementInput;
                 rotatedMovement.y = 0f; // Lock movement to the XZ plane so the player can't start flying.
-                playerRb.velocity = Vector3.Lerp(playerRb.velocity, rotatedMovement, movementLerpSpeed);
+                controller.Move(Vector3.Lerp(controller.velocity, Time.deltaTime * movementSpeed * rotatedMovement, movementLerpSpeed));
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
-                footCollider.enabled = false;
             }
-            if(movementInput == Vector3.zero & grounded)
+            else
             {
-                footCollider.enabled = true;
+                // Smoothly stop moving
+                controller.Move(Vector3.Lerp(controller.velocity, Vector3.zero, movementLerpSpeed));
             }
 
-            if (Actions.ingame.Aim.IsPressed() & grounded)
+            if (Actions.ingame.Aim.IsPressed() && controller.isGrounded)
             {
                 transform.rotation = cameraDirection;
             }
             
             // Update animation
-            Vector3 animationVelocity = Quaternion.Inverse(transform.rotation) * playerRb.velocity;
+            Vector3 animationVelocity = Quaternion.Inverse(transform.rotation) * controller.velocity;
             anim.SetFloat(xVelHash, animationVelocity.x);
             anim.SetFloat(yVelHash, animationVelocity.z);
         }
         private void HandleCrouch() => anim.SetBool(crouchHash, Actions.ingame.Crouch.IsPressed());
+
         private void HandleGunSwitch()
         {
-            if(rightGunBone.childCount <= 0)
+            if (rightGunBone.childCount <= 0)
             {
                 aimRig.weight = 0f;
             }
@@ -177,8 +170,8 @@ namespace escapefromtampere.PlayerControl
             {
                 aimRig.weight = 1f;
             }
-            
-            
+
+
             if (Actions.ingame.Shotgun.WasPerformedThisFrame())
             {
                 weaponArsenal.SetArsenal("Shotgun");
@@ -186,6 +179,7 @@ namespace escapefromtampere.PlayerControl
                 BuildAimingRig();
                 return;
             }
+
             if (Actions.ingame.Rifle.WasPerformedThisFrame())
             {
                 weaponArsenal.SetArsenal("Rifle");
@@ -193,14 +187,14 @@ namespace escapefromtampere.PlayerControl
                 BuildAimingRig();
                 return;
             }
-                
+
             if (Actions.ingame.Pistol.WasPerformedThisFrame())
             {
                 weaponArsenal.SetArsenal("Pistol");
                 anim.SetBool("HoldingBigGun", true);
                 BuildAimingRig();
                 return;
-            } 
+            }
 
             if (Actions.ingame.Holster.WasPerformedThisFrame())
             {
@@ -209,65 +203,11 @@ namespace escapefromtampere.PlayerControl
                 return;
             }
         }
-        private void HandleJump()
-        {
-            //Returnataan jos pelaajalle ei ole laitettu animatoria tai hän ei ole hypännyt
-            if (!hasAnimator) return;
-            if (!Actions.ingame.Jump.IsPressed()) return;
-            anim.SetTrigger(jumpHash);
-        }
-
-        public void JumpAddForce()
-        {
-            playerRb.AddForce(-playerRb.velocity.y * Vector3.up, ForceMode.VelocityChange);
-            playerRb.AddForce(Vector3.up * jumpFactor, ForceMode.Impulse);
-            anim.ResetTrigger(jumpHash);
-        }
-
-        private void SampleGround()
-        {
-            if (!hasAnimator) return;
-            Vector3 targetPosition;
-            targetPosition = transform.position;
-
-            RaycastHit hitInfo;
-            if (Physics.Raycast(playerRb.worldCenterOfMass, Vector3.down, out hitInfo, disToGround + 0.1f, groundCheck))
-            {
-                playerCollider.enabled = true;
-                Vector3 raycastHitPoint = hitInfo.point;
-                targetPosition.y = raycastHitPoint.y;
-                grounded = true;
-                SetAnimationGrounding();
-
-            }
-            else
-            {
-                grounded = false;
-                playerCollider.enabled = false;
-                anim.SetFloat(zVelHash, playerRb.velocity.y);
-                SetAnimationGrounding();
-            }
-            if (grounded && !Actions.ingame.Jump.WasPerformedThisFrame() && Actions.ingame.Move.ReadValue<Vector3>() != Vector3.zero)
-            {
-                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.01f);
-            }
-            else
-            {
-                transform.position = targetPosition;
-            }
-            
-            return;
-
-
-
-        }
 
         void SetAnimationGrounding()
         {
-         
-            anim.SetBool(fallingHash, !grounded);
-            anim.SetBool(groundHash, grounded);
-            
+            anim.SetBool(fallingHash, controller.velocity.y < fallingThreshold);
+            anim.SetBool(groundHash, true); // todo
         }
 
         void HandleShooting()
@@ -287,7 +227,6 @@ namespace escapefromtampere.PlayerControl
                 }
 
             }
-
         }
         void HandleAiming()
         {
