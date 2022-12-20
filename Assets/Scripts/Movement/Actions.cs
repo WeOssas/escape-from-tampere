@@ -69,7 +69,8 @@ public class Actions : MonoBehaviour
                 Shoot = asset.FindAction("In-Game/Shoot"),
                 Reload = asset.FindAction("In-Game/Reload"),
                 UnlockMouse = asset.FindAction("In-Game/UnlockMouse"),
-                OpenInventory = asset.FindAction("In-Game/OpenInventory")
+                OpenInventory = asset.FindAction("In-Game/OpenInventory"),
+                EnterCar = asset.FindAction("In-Game/Enter car")
             };
         }
 
@@ -90,6 +91,7 @@ public class Actions : MonoBehaviour
         public readonly InputAction Reload;
         public readonly InputAction UnlockMouse;
         public readonly InputAction OpenInventory;
+        public readonly InputAction EnterCar;
         
     }
 

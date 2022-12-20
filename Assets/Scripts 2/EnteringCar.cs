@@ -1,20 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class EnteringCar : MonoBehaviour
 {
-    public Camera playerCamera;
+    public float carEnterDistance = 25.0f;
     public Camera carCamera;
     public MonoBehaviour CarScript;
-    public Transform player;
     public AudioSource audioSource;
 
-    public Transform car;
-    public GameObject carModel;
-    public GameObject playerModel;
+    public GameObject car;
+    public GameObject player;
     public Transform spawnPoint;
-    public GameObject uiObject;
+    public TextMeshProUGUI guideText;
+
+    private bool isInCar = false;
 
     // Start is called before the first frame update
     void Start()
@@ -22,40 +25,48 @@ public class EnteringCar : MonoBehaviour
         CarScript.enabled = false;
         carCamera.enabled = false;
         audioSource.enabled = false;
-        uiObject.SetActive(false);
+        guideText.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ((playerModel.transform.position - carModel.transform.position).sqrMagnitude < 25.0f)
+        if (!isInCar)
         {
-            
-            uiObject.SetActive(true);
-
-            if (Input.GetKeyDown(KeyCode.E))
+            if (!isInCar && Vector3.Distance(player.transform.position, car.transform.position) < carEnterDistance)
             {
-                playerModel.SetActive(false);
-                CarScript.enabled = true;
-                carCamera.enabled = true;
-                audioSource.enabled = true;
-                audioSource.Play();
+                UpdateGuideText();
+                guideText.gameObject.SetActive(true);
+
+                if (!isInCar && Actions.ingame.EnterCar.WasPerformedThisFrame())
+                {
+                    player.SetActive(false);
+                    CarScript.enabled = true;
+                    carCamera.enabled = true;
+                    audioSource.enabled = true;
+                    audioSource.Play();
+                    isInCar = true;
+                    guideText.gameObject.SetActive(false);
+                }
+            }
+            else
+            {
+                guideText.gameObject.SetActive(false);
             }
         }
-        else
+        else if (Actions.ingame.EnterCar.WasPerformedThisFrame())
         {
-            uiObject.SetActive(false);
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            
             player.transform.position = spawnPoint.transform.position;
-            playerModel.SetActive(true);
+            player.SetActive(true);
             CarScript.enabled = false;
             carCamera.enabled = false;
             audioSource.enabled = false;
+            isInCar = false;
         }
     }
 
+    private void UpdateGuideText()
+    {
+        guideText.text = "Press " + Actions.ingame.EnterCar.GetBindingDisplayString() + " to enter/exit the car";
+    }
 }
