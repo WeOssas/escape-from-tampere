@@ -2926,26 +2926,31 @@ PrefabInstance:
     - target: {fileID: 1789069721323866049, guid: 341c83fe01a4a8248a7a146250d94e47,
         type: 3}
       propertyPath: m_Options.m_Options.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1789069721323866049, guid: 341c83fe01a4a8248a7a146250d94e47,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: 1920x1080
+      value: Native
       objectReference: {fileID: 0}
     - target: {fileID: 1789069721323866049, guid: 341c83fe01a4a8248a7a146250d94e47,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[1].m_Text
-      value: 1366x768
+      value: 1920x1080
       objectReference: {fileID: 0}
     - target: {fileID: 1789069721323866049, guid: 341c83fe01a4a8248a7a146250d94e47,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[2].m_Text
-      value: 1280x720
+      value: 1366x768
       objectReference: {fileID: 0}
     - target: {fileID: 1789069721323866049, guid: 341c83fe01a4a8248a7a146250d94e47,
         type: 3}
       propertyPath: m_Options.m_Options.Array.data[3].m_Text
+      value: 1280x720
+      objectReference: {fileID: 0}
+    - target: {fileID: 1789069721323866049, guid: 341c83fe01a4a8248a7a146250d94e47,
+        type: 3}
+      propertyPath: m_Options.m_Options.Array.data[4].m_Text
       value: 1024x768
       objectReference: {fileID: 0}
     - target: {fileID: 1789069721323866049, guid: 341c83fe01a4a8248a7a146250d94e47,
