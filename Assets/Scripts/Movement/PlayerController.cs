@@ -47,7 +47,7 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private LayerMask groundCheck;
         public bool LockCameraPosition = false;
 
-        public Transform rayShootPoint;
+        public Collider footCollider;
 
         public Collider playerCollider;
 
@@ -118,7 +118,6 @@ namespace escapefromtampere.PlayerControl
 
         private void Update()
         {
-            HandleJump();
             HandleCrouch();
             HandleGunSwitch();
             HandleShooting();
@@ -150,6 +149,11 @@ namespace escapefromtampere.PlayerControl
                 rotatedMovement.y = 0f; // Lock movement to the XZ plane so the player can't start flying.
                 playerRb.velocity = Vector3.Lerp(playerRb.velocity, rotatedMovement, movementLerpSpeed);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
+                footCollider.enabled = false;
+            }
+            if(movementInput == Vector3.zero & grounded)
+            {
+                footCollider.enabled = true;
             }
 
             if (Actions.ingame.Aim.IsPressed() & grounded)
@@ -233,8 +237,8 @@ namespace escapefromtampere.PlayerControl
                 Vector3 raycastHitPoint = hitInfo.point;
                 targetPosition.y = raycastHitPoint.y;
                 grounded = true;
-                
-                
+                SetAnimationGrounding();
+
             }
             else
             {
@@ -251,7 +255,7 @@ namespace escapefromtampere.PlayerControl
             {
                 transform.position = targetPosition;
             }
-            SetAnimationGrounding();
+            
             return;
 
 
