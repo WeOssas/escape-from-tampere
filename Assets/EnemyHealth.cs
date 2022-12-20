@@ -8,6 +8,7 @@ public class EnemyHealth : MonoBehaviour
     public Slider slider;
     public GameObject healthUI;
     public string endScene;
+    private bool defeated;
     void Start()
     {
         health = maxHealth;
@@ -28,9 +29,10 @@ public class EnemyHealth : MonoBehaviour
         {
             healthUI.SetActive(false);
             Destroy(gameObject);
+            defeated = true;
         }
            
-        if (SceneManager.GetActiveScene().name == "BossBattle")
+        if (SceneManager.GetActiveScene().name == "BossBattle" & defeated)
         {
             SceneManager.LoadScene(endScene);
         }

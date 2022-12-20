@@ -94,21 +94,17 @@ public class Actions : MonoBehaviour
     }
 
     public class UIActions
-    {
-         // As of writing, no UI actions need to be referenced from code. Add any actions here if needed.
-         
-         internal UIActions(InputActionAsset asset)
-         {
-             Actions = new InputAction[]
+    { 
+        internal UIActions(InputActionAsset asset)
+        {
+             Actions = new[]
              {
-                 
-                 // Example: Click = asset.FindAction("UI/Click")
-                 
+                 PauseMenuToggle = asset.FindAction("UI/PauseMenuToggle")
              };
          }
 
          public readonly InputAction[] Actions;
-         
-         // Example: public readonly InputAction Click;
+
+         public readonly InputAction PauseMenuToggle;
     }
 }

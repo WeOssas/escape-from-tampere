@@ -40,14 +40,19 @@ public class KeybindListEntry : MonoBehaviour
     
     public void StartRebinding()
     {
+        action.Disable();
         var operation = action.PerformInteractiveRebinding()
             .WithTargetBinding(bindingIndex)
             .WithCancelingThrough("<Keyboard>/escape")
             .OnComplete(operation => {
                 boundKeyText.text = action.bindings[bindingIndex].ToDisplayString();
                 boundKeyText.color = normalBindingColor;
+                operation.action.Enable();
                 operation.Dispose();
                 _rebindingOperations.Remove(operation);
+            })
+            .OnCancel(operation => {
+                operation.action.Enable();
             })
             .Start();
         

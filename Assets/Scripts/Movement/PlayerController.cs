@@ -47,6 +47,10 @@ namespace escapefromtampere.PlayerControl
         [SerializeField] private LayerMask groundCheck;
         public bool LockCameraPosition = false;
 
+        public Transform rayShootPoint;
+
+        public Collider playerCollider;
+
         private Rigidbody playerRb;
 
         private Transform GunParent;
@@ -85,6 +89,7 @@ namespace escapefromtampere.PlayerControl
 
         private GunV2 currentWeapon;
 
+
         
         private const float walkSpeed = 4f;
         private const float runSpeed = 12f;
@@ -107,7 +112,6 @@ namespace escapefromtampere.PlayerControl
             fallingHash = Animator.StringToHash("Falling");
             zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
-           
             
             InitializeCursorLock();
         }
@@ -219,19 +223,38 @@ namespace escapefromtampere.PlayerControl
         private void SampleGround()
         {
             if (!hasAnimator) return;
+            Vector3 targetPosition;
+            targetPosition = transform.position;
 
             RaycastHit hitInfo;
-            if(Physics.Raycast(playerRb.worldCenterOfMass, Vector3.down, out hitInfo, disToGround + 0.1f, groundCheck))
+            if (Physics.Raycast(playerRb.worldCenterOfMass, Vector3.down, out hitInfo, disToGround + 0.1f, groundCheck))
             {
+                playerCollider.enabled = true;
+                Vector3 raycastHitPoint = hitInfo.point;
+                targetPosition.y = raycastHitPoint.y;
                 grounded = true;
-                SetAnimationGrounding();
-                return;
+                
+                
             }
-            
-            grounded = false;
-            anim.SetFloat(zVelHash, playerRb.velocity.y);
+            else
+            {
+                grounded = false;
+                playerCollider.enabled = false;
+                anim.SetFloat(zVelHash, playerRb.velocity.y);
+                SetAnimationGrounding();
+            }
+            if (grounded && !Actions.ingame.Jump.WasPerformedThisFrame() && Actions.ingame.Move.ReadValue<Vector3>() != Vector3.zero)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime / 0.01f);
+            }
+            else
+            {
+                transform.position = targetPosition;
+            }
             SetAnimationGrounding();
             return;
+
+
 
         }
 
@@ -289,14 +312,19 @@ namespace escapefromtampere.PlayerControl
             {
                 // Called when the player unlocks the mouse
 
-                Cursor.visible = !Cursor.visible;
-                Cursor.lockState = Cursor.visible ? CursorLockMode.Confined : CursorLockMode.Locked;
+                SetCursorLock(Cursor.visible);
             };
             
             // When the game starts, lock the mouse.
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            SetCursorLock(true);
         }
+
+        public static void SetCursorLock(bool locked)
+        {
+            Cursor.visible = !locked;
+            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.Confined;
+        }
+        
         void BuildAimingRig()
         {
             GunParent = rightGunBone.GetChild(0);

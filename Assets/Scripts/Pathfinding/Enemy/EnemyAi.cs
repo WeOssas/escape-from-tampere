@@ -35,6 +35,11 @@ public class EnemyAi : MonoBehaviour
 
     private AbstractEnemyPathfindGoal[] pathfindingGoals;
     [CanBeNull] private AbstractEnemyPathfindGoal activeGoal;
+    
+    /// <summary>
+    /// Number of FixedUpdate cycles remaining until the next FixedUpdate call should (re-)calculate a pathfinding destination.
+    /// </summary>
+    private int fixedUpdateCyclesUntilPathfind = 0;
 
     private void Awake()
     {
@@ -44,11 +49,10 @@ public class EnemyAi : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Update pathfinding with a new destination if needed.
-        if (!agent.hasPath)
+        // Update pathfinding with a new destination if there is no goal or it has been long enough since the last update.
+        if (fixedUpdateCyclesUntilPathfind-- < 0 || !agent.hasPath)
         {
             SetPathfindingDestination();
-            anim.SetBool("Patrolling", true);
         }
         
         // Attack a nearby player.
@@ -80,6 +84,7 @@ public class EnemyAi : MonoBehaviour
                     if (activeGoal != null) activeGoal.OnUnused(anim);
                     goal.OnUsed(anim);
                     activeGoal = goal;
+                    fixedUpdateCyclesUntilPathfind = activeGoal.GetUpdateFrequency();
                 }
                 return;
             }
@@ -90,7 +95,7 @@ public class EnemyAi : MonoBehaviour
 
     private void AttackPlayer()
     {
-        transform.LookAt(PlayerInstance.instance.transform);
+        //transform.LookAt(PlayerInstance.instance.transform);
 
         if (!attackOnCooldown)
         {
@@ -101,7 +106,6 @@ public class EnemyAi : MonoBehaviour
             // Play attack animation
             anim.Play("attack");
             hitSound.Play();
-
 
             // Set attack cooldown
             attackOnCooldown = true;
