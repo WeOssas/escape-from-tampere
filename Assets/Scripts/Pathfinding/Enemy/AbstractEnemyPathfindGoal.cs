@@ -32,37 +32,23 @@ namespace Pathfinding.Enemy
         [CanBeNull]
         public NavMeshPath GetDestination()
         {
-            int loopCounter = 0;
-            // Loop until a something is returned (either a valid destination or null)
-            while (true)
+            // Get a possible destination.
+            Vector3? destination = GetDestinationSuggestion();
+
+            if (destination != null)
             {
-                if (loopCounter++ > 10)
+                // Agent calculates a path to the destination and stores the result into a NavMeshPath.
+                // The path is determined to be valid if it can be calculated (calculation method returns true) and the path is not invalid (is partial or complete).
+                // Valid path will be returned.
+                NavMeshPath path = new NavMeshPath();
+                if (agent.CalculatePath((Vector3)destination, path) && path.status != NavMeshPathStatus.PathInvalid)
                 {
-                    //Debug.Log("Aborted searching for a new pathfinding destination to prevent an infinitely recurring loop and/or a large impact on performance.");
-                    return null;
-                }
-
-                // Get a new destination.
-                Vector3? destination = GetDestinationSuggestion();
-
-                if (destination != null)
-                {
-                    // Agent calculates a path to the destination and stores the result into a NavMeshPath.
-                    // The path is determined to be valid if it can be calculated (calculation method returns true) and the path is not invalid (is partial or complete).
-                    // Valid path will be returned.
-                    NavMeshPath path = new NavMeshPath();
-                    if (agent.CalculatePath((Vector3)destination, path) && path.status == NavMeshPathStatus.PathComplete)
-                    {
-                        // The path is valid, so return it.
-                        return path;
-                    }
-                }
-                else
-                {
-                    // The suggestion was null, so it is assumed that no suggestion can be provided on next iterations either.
-                    return null;
+                    // The path is valid, so return it.
+                    return path;
                 }
             }
+            
+            return null;
         }
 
         /// <returns>

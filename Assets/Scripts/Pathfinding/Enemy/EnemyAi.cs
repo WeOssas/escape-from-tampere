@@ -23,6 +23,12 @@ public class EnemyAi : MonoBehaviour
     private bool attackOnCooldown;
     public Animator anim;
     public AudioSource hitSound;
+    
+    /// <summary>
+    /// Distance the player has to be outside of for the enemy to stop all AI.
+    /// </summary>
+    public float freezeRange = 50f;
+    
     /// <summary>
     /// Distance the player has to be within to be attacked by this enemy
     /// </summary>
@@ -49,16 +55,23 @@ public class EnemyAi : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Update pathfinding with a new destination if there is no goal or it has been long enough since the last update.
-        if (fixedUpdateCyclesUntilPathfind-- < 0 || !agent.hasPath)
+        float distanceToPlayer = Vector3.Distance(transform.position, PlayerInstance.instance.transform.position);
+
+        if (distanceToPlayer >= freezeRange)
         {
-            SetPathfindingDestination();
+            return;
         }
         
         // Attack a nearby player.
         if (Vector3.Distance(transform.position, PlayerInstance.instance.transform.position) <= attackRange)
         {
             AttackPlayer();
+        }
+        
+        // Update pathfinding with a new destination if there is no goal or it has been long enough since the last update.
+        if (fixedUpdateCyclesUntilPathfind-- < 0 || agent.isPathStale)
+        {
+            SetPathfindingDestination();
         }
     }
 

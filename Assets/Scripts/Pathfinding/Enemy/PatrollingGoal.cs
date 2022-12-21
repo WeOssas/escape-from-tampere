@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Pathfinding.Enemy
@@ -10,16 +11,46 @@ namespace Pathfinding.Enemy
         /// </summary>
         public float pathfindingRange;
 
+        public int loopTimeout = 3;
+        
+        private Collider collider;
+
+        private void Awake()
+        {
+            collider = GetComponent<Collider>();
+        }
+
         /// <returns>
         /// A destination suggestion that will be used if it is determined valid. May be null (in which case the suggestion won't be valid).
         /// </returns>
         protected override Vector3? GetDestinationSuggestion()
         {
-            // TODO: Implement pathfinding across different Y coordinates.
-            float randomX = Random.Range(-pathfindingRange, pathfindingRange);
-            float randomZ = Random.Range(-pathfindingRange, pathfindingRange);
+            // Try a few (loopTimeout) times to find a valid destination.
+            for (int i = 0; i < loopTimeout; i++)
+            {
+                Vector2 direction = Random.insideUnitCircle * pathfindingRange; // A random direction with the magnitude of pathfindingRange.
 
-            return transform.position + new Vector3(randomX, 0f, randomZ);
+                Vector3 raycastOrigin = transform.position;
+                raycastOrigin.y = collider.bounds.max.y;
+                Vector3 raycastDirection = new Vector3(direction.x, collider.bounds.min.y, direction.y);
+                
+                RaycastHit hit;
+                bool result = Physics.Raycast(
+                    raycastOrigin,
+                    raycastDirection,
+                    out hit,
+                    pathfindingRange * 4f, // Not a scientific number, but this should be plenty.
+                    LayerMask.NameToLayer("Ground") // Only care about hits to ground
+                );
+
+                if (result)
+                {
+                    return hit.point;
+                }
+            }
+            
+            // If nothing valid was found, return null and try again next time.
+            return null;
         }
 
         /// <returns>
