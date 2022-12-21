@@ -103,7 +103,7 @@ public class EnemyAi : MonoBehaviour
             }
         }
         
-        // TODO: Consider a cooldown for searching for a new destination if no destination is found now.
+        fixedUpdateCyclesUntilPathfind = 20;
     }
 
     private void AttackPlayer()

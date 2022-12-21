@@ -2269,7 +2269,7 @@ NavMeshAgent:
   m_Height: 3.628196
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
+  m_ObstacleAvoidanceType: 3
 --- !u!95 &984947385668286494
 Animator:
   serializedVersion: 4
@@ -2322,7 +2322,7 @@ MonoBehaviour:
   attackCooldown: 1
   anim: {fileID: 984947385668286494}
   hitSound: {fileID: 4983030949633451951}
-  freezeRange: 50
+  freezeRange: 100
   attackRange: 2
   attackDamage: 10
 --- !u!114 &8042446267626576620
