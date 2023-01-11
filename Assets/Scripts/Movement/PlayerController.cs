@@ -10,7 +10,6 @@ namespace escapefromtampere.PlayerControl
 {
     public class PlayerController : MonoBehaviour
     {
-
         [SerializeField] private float movementLerpSpeed = 0.85F;
         
         [FormerlySerializedAs("movementLerpSpeed")] [SerializeField] private float movementSpeed = 0.2F;
@@ -29,24 +28,11 @@ namespace escapefromtampere.PlayerControl
 
         [SerializeField] private TwoBoneIKConstraint aimIKConstraint;
 
-        [SerializeField] private Transform camHolder;
-
-        [SerializeField] private Transform aimingPos;
-
         [SerializeField] private Transform rightGunBone;
         
         [SerializeField] private Transform cam;
 
         [SerializeField] private CinemachineVirtualCamera AimCam, MainCam;
-
-        [SerializeField] private float upperLimit = -40f;
-        [SerializeField] private float bottomLimit = 70f;
-
-        [SerializeField] private float mouseSens = 21f;
-
-        [SerializeField] private float jumpFactor = 250f;
-        
-        public bool LockCameraPosition = false;
 
         private CharacterController controller;
 
@@ -64,36 +50,20 @@ namespace escapefromtampere.PlayerControl
 
         private int yVelHash;
 
-        private int jumpHash;
-
         private int groundHash;
 
         private int fallingHash;
 
-        private float xRotation;
-
-        private int zVelHash;
-
         private int crouchHash;
-
-        private int aimHash;
 
         private bool readyToShoot;
 
         private WeaponArsenal weaponArsenal;
 
         private GunV2 currentWeapon;
-
-
         
-        private const float walkSpeed = 4f;
-        private const float runSpeed = 12f;
-        private float turnSmoothVelocity = 0.1f;
-        private float turnSmoothTime = 0.12f;
-        
-        
-
-        private Vector2 currentVelocity;
+        [SerializeField] private float walkSpeed = 4f;
+        [SerializeField] private float runSpeed = 12f;
 
         private void Start()
         {
@@ -102,10 +72,8 @@ namespace escapefromtampere.PlayerControl
             weaponArsenal = GetComponent<WeaponArsenal>();
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
-            jumpHash = Animator.StringToHash("Jump");
             groundHash = Animator.StringToHash("Grounded");
             fallingHash = Animator.StringToHash("Falling");
-            zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
             
             InitializeCursorLock();
@@ -125,8 +93,6 @@ namespace escapefromtampere.PlayerControl
         {
             if (!hasAnimator) return;
 
-            Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
-            
             float speedMultiplier;
             if (Actions.ingame.Run.IsPressed()) speedMultiplier = runSpeed;
             else if (Actions.ingame.Crouch.IsPressed()) speedMultiplier = 1.5f;
@@ -137,10 +103,15 @@ namespace escapefromtampere.PlayerControl
 
             if (movementInput != Vector3.zero)
             {
+                Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
                 Vector3 rotatedMovement = cameraDirection * movementInput;
                 rotatedMovement.y = 0f; // Lock movement to the XZ plane so the player can't start flying.
                 controller.Move(Vector3.Lerp(controller.velocity, Time.deltaTime * movementSpeed * rotatedMovement, movementLerpSpeed));
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
+
+                if (!Actions.ingame.Aim.IsPressed())
+                {
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);                    
+                }
             }
             else
             {
@@ -148,9 +119,11 @@ namespace escapefromtampere.PlayerControl
                 controller.Move(Vector3.Lerp(controller.velocity, Vector3.zero, movementLerpSpeed));
             }
 
-            if (Actions.ingame.Aim.IsPressed() && controller.isGrounded)
+            if (Actions.ingame.Aim.IsPressed())
             {
-                transform.rotation = cameraDirection;
+                Vector3 rotation = transform.rotation.eulerAngles;
+                rotation.y = cam.rotation.eulerAngles.y;
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(rotation), lookLerpSpeed);
             }
             
             // Update animation
