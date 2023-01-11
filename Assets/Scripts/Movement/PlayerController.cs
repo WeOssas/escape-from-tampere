@@ -10,7 +10,6 @@ namespace escapefromtampere.PlayerControl
 {
     public class PlayerController : MonoBehaviour
     {
-
         [SerializeField] private float movementLerpSpeed = 0.85F;
         
         [FormerlySerializedAs("movementLerpSpeed")] [SerializeField] private float movementSpeed = 0.2F;
@@ -29,24 +28,11 @@ namespace escapefromtampere.PlayerControl
 
         [SerializeField] private TwoBoneIKConstraint aimIKConstraint;
 
-        [SerializeField] private Transform camHolder;
-
-        [SerializeField] private Transform aimingPos;
-
         [SerializeField] private Transform rightGunBone;
         
         [SerializeField] private Transform cam;
 
         [SerializeField] private CinemachineVirtualCamera AimCam, MainCam;
-
-        [SerializeField] private float upperLimit = -40f;
-        [SerializeField] private float bottomLimit = 70f;
-
-        [SerializeField] private float mouseSens = 21f;
-
-        [SerializeField] private float jumpFactor = 250f;
-        
-        public bool LockCameraPosition = false;
 
         private CharacterController controller;
 
@@ -64,36 +50,20 @@ namespace escapefromtampere.PlayerControl
 
         private int yVelHash;
 
-        private int jumpHash;
-
         private int groundHash;
 
         private int fallingHash;
 
-        private float xRotation;
-
-        private int zVelHash;
-
         private int crouchHash;
-
-        private int aimHash;
 
         private bool readyToShoot;
 
         private WeaponArsenal weaponArsenal;
 
         private GunV2 currentWeapon;
-
-
         
-        private const float walkSpeed = 4f;
-        private const float runSpeed = 12f;
-        private float turnSmoothVelocity = 0.1f;
-        private float turnSmoothTime = 0.12f;
-        
-        
-
-        private Vector2 currentVelocity;
+        [SerializeField] private float walkSpeed = 4f;
+        [SerializeField] private float runSpeed = 12f;
 
         private void Start()
         {
@@ -102,10 +72,8 @@ namespace escapefromtampere.PlayerControl
             weaponArsenal = GetComponent<WeaponArsenal>();
             xVelHash = Animator.StringToHash("X_Velocity");
             yVelHash = Animator.StringToHash("Y_Velocity");
-            jumpHash = Animator.StringToHash("Jump");
             groundHash = Animator.StringToHash("Grounded");
             fallingHash = Animator.StringToHash("Falling");
-            zVelHash = Animator.StringToHash("Z_Velocity");
             crouchHash = Animator.StringToHash("Crouch");
             
             InitializeCursorLock();
