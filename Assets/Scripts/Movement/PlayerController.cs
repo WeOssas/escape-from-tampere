@@ -93,8 +93,6 @@ namespace escapefromtampere.PlayerControl
         {
             if (!hasAnimator) return;
 
-            Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
-            
             float speedMultiplier;
             if (Actions.ingame.Run.IsPressed()) speedMultiplier = runSpeed;
             else if (Actions.ingame.Crouch.IsPressed()) speedMultiplier = 1.5f;
@@ -105,10 +103,15 @@ namespace escapefromtampere.PlayerControl
 
             if (movementInput != Vector3.zero)
             {
+                Quaternion cameraDirection = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
                 Vector3 rotatedMovement = cameraDirection * movementInput;
                 rotatedMovement.y = 0f; // Lock movement to the XZ plane so the player can't start flying.
                 controller.Move(Vector3.Lerp(controller.velocity, Time.deltaTime * movementSpeed * rotatedMovement, movementLerpSpeed));
-                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);
+
+                if (!Actions.ingame.Aim.IsPressed())
+                {
+                    transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(rotatedMovement, transform.up), lookLerpSpeed);                    
+                }
             }
             else
             {
@@ -116,9 +119,11 @@ namespace escapefromtampere.PlayerControl
                 controller.Move(Vector3.Lerp(controller.velocity, Vector3.zero, movementLerpSpeed));
             }
 
-            if (Actions.ingame.Aim.IsPressed() && controller.isGrounded)
+            if (Actions.ingame.Aim.IsPressed())
             {
-                transform.rotation = cameraDirection;
+                Vector3 rotation = transform.rotation.eulerAngles;
+                rotation.y = cam.rotation.eulerAngles.y;
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(rotation), lookLerpSpeed);
             }
             
             // Update animation
